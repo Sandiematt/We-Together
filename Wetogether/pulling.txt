@@ -1,0 +1,8 @@
+
+FOR PUSHING...
+git add .
+git commit -m "comment"
+git push -u orgin master
+
+FOR PULLING..
+git pull
