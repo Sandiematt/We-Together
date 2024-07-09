@@ -3,8 +3,7 @@ import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'rea
 
 export default function HomeScreen({ navigation }) {
   const goToProfile = () => {
-    // Navigate to the profile screen using navigation.navigate()
-    // Example: navigation.navigate('Profile');
+    navigation.navigate('Profile');
   };
 
   return (

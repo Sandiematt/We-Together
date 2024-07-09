@@ -6,6 +6,8 @@ import AboutUs from './components/AboutUs';
 import CustomDrawerContent from './components/CustomDrawerContent';
 import HomeScreen from './components/HomeScreen';
 import ProfileScreen from './components/ProfileScreen';
+import EventAttendance from './components/EventAttendance';
+import LoanRequest from './components/LoanRequest';
 
 const Drawer = createDrawerNavigator();
 
@@ -17,6 +19,8 @@ export default function App() {
         drawerContent={(props) => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen name="Event Attendance" component={EventAttendance}/>
+        <Drawer.Screen name="Loan Request" component={LoanRequest} />
         <Drawer.Screen name="About Us" component={AboutUs} />
       </Drawer.Navigator>
       <StatusBar style="auto" />
