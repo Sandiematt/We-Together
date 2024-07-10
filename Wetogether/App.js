@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,18 +8,42 @@ import HomeScreen from './components/HomeScreen';
 import ProfileScreen from './components/ProfileScreen';
 import EventAttendance from './components/EventAttendance';
 import LoanRequest from './components/LoanRequest';
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    'Poppins-Bold': require('./fonts/Poppins-Bold.ttf'),
+  });
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
       <Drawer.Navigator
         initialRouteName="Home"
-        drawerContent={(props) => <CustomDrawerContent {...props} />}>
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+      >
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="Event Attendance" component={EventAttendance}/>
+        <Drawer.Screen name="Event Attendance" component={EventAttendance} />
         <Drawer.Screen name="Loan Request" component={LoanRequest} />
         <Drawer.Screen name="About Us" component={AboutUs} />
       </Drawer.Navigator>

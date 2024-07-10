@@ -11,11 +11,14 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.header}>
         <Text style={styles.greetingText}>Hello User!</Text>
         <TouchableOpacity style={styles.profileButton} onPress={goToProfile}>
-          <Text style={styles.profileButtonText}>To Profile</Text>
+          <Image
+            source={require('../assets/right-arrow.png')} 
+            style={styles.profileButtonImage}
+          />
         </TouchableOpacity>
       </View>
       <Image
-        source={require('../assets/profile_icon.png')}
+        source={require('../assets/main_profile.png')}
         style={styles.profileIcon}
       />
       <View style={styles.eventsContainer}>
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
   },
   greetingText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
   },
   profileIcon: {
     width: 150,
@@ -71,15 +74,11 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   profileButton: {
-    backgroundColor: '#7713D1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 30,
+    padding: 10,
   },
-  profileButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+  profileButtonImage: {
+    width: 25, 
+    height: 25, 
   },
   eventsContainer: {
     width: '100%',
@@ -87,8 +86,8 @@ const styles = StyleSheet.create({
   },
   eventsTitle: {
     fontSize: 25,
-    fontWeight: 'bold',
     marginBottom: 20,
+    fontFamily: 'Poppins-Bold',
   },
   eventBox: {
     backgroundColor: '#fff',
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
   },
   eventTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
     marginBottom: 5,
   },
   eventDetails: {

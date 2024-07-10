@@ -6,7 +6,6 @@ export default function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>We-Together</Text>
         <Image source={require('../assets/main_logo.png')} style={styles.logo} />
       </View>
       <DrawerItemList {...props} />
@@ -16,7 +15,7 @@ export default function CustomDrawerContent(props) {
 
 const styles = StyleSheet.create({
   header: {
-    padding: 20,
+    
     backgroundColor: '#f4f4f4',
     alignItems: 'center',
     justifyContent: 'center',
@@ -29,8 +28,8 @@ const styles = StyleSheet.create({
     marginRight:40,
   },
   logo: {
-    width: 100,
-    height: 50,
-    marginLeft: 10,
+    width: 300,
+    height: 100,
+    
   },
 });

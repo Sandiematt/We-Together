@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
         marginTop: 0,
         marginBottom:80,
         marginLeft: 130,
+        fontFamily:'Poppins-Bold',
     },
     icon: {
         height: 100,
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 20,
         color: "black",
+        fontFamily:'Poppins-Bold',
     },
     developersList: {
         flexDirection: 'row',

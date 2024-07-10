@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity} from 'react-native';
 import bgImage from '../assets/profile_bg.png';
 import { AntDesign } from '@expo/vector-icons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ProfileScreen({ navigation }) {
   return (
+    <ScrollView>
     <ImageBackground source={bgImage} style={styles.bgImage}>
       <View style={styles.container}>
         <View style={styles.icons}>
@@ -38,6 +40,7 @@ export default function ProfileScreen({ navigation }) {
 
       </View>
     </ImageBackground>
+    </ScrollView>
   );
 }
 
