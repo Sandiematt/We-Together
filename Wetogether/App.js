@@ -16,6 +16,7 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   let [fontsLoaded] = useFonts({
     'Poppins-Bold': require('./fonts/Poppins-Bold.ttf'),
+    'Poppins-Normal' :require('./fonts/Poppins-Regular.ttf')
   });
 
   useEffect(() => {

@@ -1,74 +1,127 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 
-const loanTypes = [
-  { id: 1, title: 'Personal Loan', amount: '$5,000 - $50,000' },
-  { id: 2, title: 'Home Loan', amount: '$100,000 - $500,000' },
-];
-
-export default function LoanRequest() {
+const LoanRequest = () => {
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {loanTypes.map((loan) => (
-          <TouchableOpacity key={loan.id} style={styles.card}>
-            <View style={styles.cardContent}>
-              <View style={styles.textContainer}>
-                <Text style={styles.cardTitle}>{loan.title}</Text>
-                <Text style={styles.cardAmount}>{loan.amount}</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.card}>
+        <View style={styles.infoContainer}>
+          <Text style={styles.title}>Policy Loan</Text>
+          <Text style={styles.subtitle}>Lowest interest as low as 0.18%</Text>
+          <View style={styles.detailsContainer}>
+            <View style={styles.details}>
+              <View style={styles.detailItem}>
+                <Text style={styles.amount}>$20,000</Text>
+                <Text style={styles.label}>Maximum amount</Text>
               </View>
-              <TouchableOpacity style={styles.arrowButton}>
-                <AntDesign name="arrowright" size={24} color="#007AFF" />
-              </TouchableOpacity>
+              <View style={styles.detailItem}>
+                <Text style={styles.interest}>0.18%</Text>
+                <Text style={styles.label}>Interest</Text>
+              </View>
             </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Apply Now</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      {/* Personal Loan Card */}
+      <View style={styles.card}>
+        <View style={styles.infoContainer}>
+          <Text style={styles.title}>Personal Loan</Text>
+          <Text style={styles.subtitle }>Flexible repayment options</Text>
+          <View style={styles.detailsContainer}>
+            <View style={styles.details}>
+              <View style={styles.detailItem}>
+                <Text style={styles.amount}>$15,000</Text>
+                <Text style={styles.label}>Maximum amount</Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.interest}>0.45%</Text>
+                <Text style={styles.label}>Interest</Text>
+              </View>
+            </View>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Apply Now</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-  },
-  scrollContainer: {
-    alignItems: 'center',
+    flexGrow: 1,
+    paddingTop: 36, 
+    paddingBottom: 18, 
+    paddingHorizontal: 18,
+    backgroundColor: '#f7f7f7',
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 50,
-    marginBottom: 15,
-    width: '100%',
+    marginBottom: 18,
+    padding: 18,
+    borderRadius: 9,
+    backgroundColor: '#ffffff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 1.8 },
+    shadowOpacity: 0.09,
+    shadowRadius: 9,
+    elevation: 4.5,
   },
-  cardContent: {
+  infoContainer: {
+    alignItems: 'flex-start',
+  },
+  title: {
+    fontSize: 19.8,
+    fontWeight: 'bold',
+    marginBottom: 4.5,
+  },
+  subtitle: {
+    fontSize: 14.4,
+    color: '#666',
+  },
+  detailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    width: '100%',
+    marginTop: 18,
   },
-  textContainer: {
-    
-
+  details: {
+    flexDirection: 'row',
   },
-  cardTitle: {
-    fontSize: 18,
+  detailItem: {
+    marginRight: 13.5,
+  },
+  amount: {
+    fontSize: 21.6,
     fontWeight: 'bold',
-    marginBottom: 5,
+    color: '#333',
   },
-  cardAmount: {
-    fontSize: 16,
-    color: '#666',
+  interest: {
+    fontSize: 21.6,
+    fontWeight: 'bold',
+    color: '#333',
   },
-  arrowButton: {
-    padding: 10,
+  label: {
+    fontSize: 12.6,
+    color: '#999',
+    marginTop: 4.5,
+  },
+  button: {
+    paddingVertical: 10.8,
+    paddingHorizontal: 18,
+    borderRadius: 45,
+    backgroundColor: '#4c8bf5',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 14.4,
+    fontWeight: 'bold',
   },
 });
+
+export default LoanRequest;
