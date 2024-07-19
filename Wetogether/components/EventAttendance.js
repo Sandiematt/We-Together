@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 const events = [
   { title: 'Pottery Workshop', content: 'Learn the art of pottery.', venue: 'Art Center', date: '2024-07-20' },
@@ -9,12 +8,6 @@ const events = [
 ];
 
 export default function EventAttendance() {
-  const navigation = useNavigation();
-
-  const handleAttendPress = () => {
-    navigation.navigate('EventRegistration');
-  };
-
   return (
     <ScrollView style={styles.container}>
       {events.map((event, index) => (
