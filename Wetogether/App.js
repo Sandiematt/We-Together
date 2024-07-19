@@ -49,6 +49,7 @@ export default function App() {
         <Drawer.Screen name="About Us" component={AboutUs} />
       </Drawer.Navigator>
       <StatusBar style="auto" />
+      
     </NavigationContainer>
   );
 }
