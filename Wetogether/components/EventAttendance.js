@@ -1,5 +1,7 @@
+// EventAttendance.js
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const events = [
   { title: 'Pottery Workshop', content: 'Learn the art of pottery.', venue: 'Art Center', date: '2024-07-20' },
@@ -8,6 +10,12 @@ const events = [
 ];
 
 export default function EventAttendance() {
+  const navigation = useNavigation();
+
+  const handleAttendPress = () => {
+    navigation.navigate('EventRegistration');
+  };
+
   return (
     <ScrollView style={styles.container}>
       {events.map((event, index) => (
@@ -24,7 +32,7 @@ export default function EventAttendance() {
                 <Text style={styles.contentDetails}>Venue: {event.venue}</Text>
                 <Text style={styles.contentDetails}>Date: {event.date}</Text>
               </View>
-              <TouchableOpacity style={styles.button} >
+              <TouchableOpacity style={styles.button} onPress={() => handleAttendPress(event)}>
                 <Text style={styles.buttonText}>Attend</Text>
               </TouchableOpacity>
             </View>
@@ -32,6 +40,17 @@ export default function EventAttendance() {
         </View>
       ))}
     </ScrollView>
+  );
+}
+
+export default function EventAttendance() {
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator initialRouteName="EventList">
+        <Stack.Screen name="EventList" component={EventList} options={{ title: 'Events' }} />
+        <Stack.Screen name="EventDetail" component={EventDetail} options={{ title: 'Event Details' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
