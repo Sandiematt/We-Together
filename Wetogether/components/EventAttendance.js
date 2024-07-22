@@ -1,7 +1,9 @@
 // EventAttendance.js
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import EventDetail from './EventDetail';
 
 const events = [
   { title: 'Pottery Workshop', content: 'Learn the art of pottery.', venue: 'Art Center', date: '2024-07-20' },
@@ -9,11 +11,11 @@ const events = [
   { title: 'Cooking Class', content: 'Master the art of Italian cuisine.', venue: 'Cooking Studio', date: '2024-07-28' },
 ];
 
-export default function EventAttendance() {
-  const navigation = useNavigation();
+const Stack = createStackNavigator();
 
-  const handleAttendPress = () => {
-    navigation.navigate('EventRegistration');
+function EventList({ navigation }) {
+  const handleAttendPress = (event) => {
+    navigation.navigate('EventDetail', { event });
   };
 
   return (

@@ -1,16 +1,50 @@
-// EventDetail.js
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
 export default function EventDetail({ route }) {
   const { event } = route.params;
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [age, setAge] = useState('');
+  const [contact, setContact] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{event.title}</Text>
-      <Text style={styles.content}>{event.content}</Text>
-      <Text style={styles.details}>Venue: {event.venue}</Text>
-      <Text style={styles.details}>Date: {event.date}</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setName}
+        value={name}
+        placeholder='Name'
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setEmail}
+        value={email}
+        placeholder='Email'
+      />
+      <Picker
+        selectedValue={selectedGender}
+        onValueChange={(itemValue) => setSelectedGender(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Select Gender" value="" />
+        <Picker.Item label="Male" value="Male" />
+        <Picker.Item label="Female" value="Female" />
+      </Picker>
+      <TextInput
+        style={styles.input}
+        onChangeText={setAge}
+        value={age}
+        placeholder='Age'
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setContact}
+        value={contact}
+        placeholder='Mobile No'
+      />
     </View>
   );
 }
@@ -21,18 +55,17 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
     marginBottom: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
   },
-  content: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  details: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 5,
+  picker: {
+    height: 50,
+    width: '100%',
+    marginBottom: 20,
   },
 });
