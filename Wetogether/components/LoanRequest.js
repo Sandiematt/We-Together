@@ -76,19 +76,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 19.8,
-    fontWeight: 'bold',
     marginBottom: 4.5,
+    fontFamily:'Poppins-Bold',
   },
   subtitle: {
     fontSize: 14.4,
     color: '#666',
+    fontFamily:'Poppins-Normal',
   },
   detailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginTop: 18,
+    marginTop: 10,
   },
   details: {
     flexDirection: 'row',
@@ -98,18 +99,19 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 21.6,
-    fontWeight: 'bold',
     color: '#333',
+    fontFamily:'Poppins-Bold',
   },
   interest: {
     fontSize: 21.6,
-    fontWeight: 'bold',
     color: '#333',
+    fontFamily:'Poppins-Bold',
   },
   label: {
     fontSize: 12.6,
     color: '#999',
-    marginTop: 4.5,
+    marginBottom: 5,
+    fontFamily:'Poppins-Normal'
   },
   button: {
     paddingVertical: 10.8,
@@ -120,7 +122,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#ffffff',
     fontSize: 14.4,
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
+    marginTop:5,
   },
 });
 

@@ -1,4 +1,4 @@
-// EventAttendance.js
+
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -24,7 +24,7 @@ function EventList({ navigation }) {
         <View style={styles.card} key={index}>
           <Image
             style={styles.cardImage}
-            source={{ uri: `https://picsum.photos/700?random=${index}` }}
+            source={{ uri: `https://picsum.photos/700?random=${index}`}}
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
@@ -49,7 +49,7 @@ export default function EventAttendance() {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="EventList">
-        <Stack.Screen name="EventList" component={EventList} options={{ title: 'Events' }} />
+        <Stack.Screen name="EventList" component={EventList}/>
         <Stack.Screen name="EventDetail" component={EventDetail} options={{ title: 'Event Details' }} />
       </Stack.Navigator>
     </NavigationContainer>

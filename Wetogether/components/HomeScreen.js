@@ -1,9 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 
+const events = [
+  { title: 'Pottery Workshop', content: 'Learn the art of pottery.', venue: 'Art Center', date: '2024-07-20' },
+  { title: 'Yoga Retreat', content: 'Relax and rejuvenate.', venue: 'Wellness Spa', date: '2024-07-25' },
+  { title: 'Cooking Class', content: 'Master the art of Italian cuisine.', venue: 'Cooking Studio', date: '2024-07-28' },
+];
+
 export default function HomeScreen({ navigation }) {
   const goToProfile = () => {
     navigation.navigate('Profile');
+  };
+
+  const handleAttendPress = (event) => {
+    // Handle event attendance logic here
+    console.log(`Attending event: ${event.title}`);
   };
 
   return (
@@ -23,31 +34,32 @@ export default function HomeScreen({ navigation }) {
       />
       <View style={styles.eventsContainer}>
         <Text style={styles.eventsTitle}>Upcoming Events..</Text>
-        <View style={styles.eventBox}>
-          <Text style={styles.eventTitle}>Event 1</Text>
-          <Text style={styles.eventDetails}>Date:</Text>
-          <Text style={styles.eventDetails}>Time:</Text>
-          <Text style={styles.eventDetails}>Venue:</Text>
-          <Text style={styles.eventDetails}>Location:</Text>
-        </View>
-        <View style={styles.eventBox}>
-          <Text style={styles.eventTitle}>Event 2</Text>
-          <Text style={styles.eventDetails}>Date:</Text>
-          <Text style={styles.eventDetails}>Time:</Text>
-          <Text style={styles.eventDetails}>Venue:</Text>
-          <Text style={styles.eventDetails}>Location:</Text>
-        </View>
-        <View style={styles.eventBox}>
-          <Text style={styles.eventTitle}>Event 3</Text>
-          <Text style={styles.eventDetails}>Date:</Text>
-          <Text style={styles.eventDetails}>Time:</Text>
-          <Text style={styles.eventDetails}>Venue:</Text>
-          <Text style={styles.eventDetails}>Location:</Text>
-        </View>
+        {events.map((event, index) => (
+          <View style={styles.card} key={index}>
+            <Image
+              style={styles.cardImage}
+              source={{ uri: `https://picsum.photos/700?random=${index}`}}
+            />
+            <View style={styles.cardContent}>
+              <Text style={styles.contentTitle}>{event.title}</Text>
+              <Text style={styles.contentText}>{event.content}</Text>
+              <View style={styles.detailsContainer}>
+                <View>
+                  <Text style={styles.contentDetails}>Venue: {event.venue}</Text>
+                  <Text style={styles.contentDetails}>Date: {event.date}</Text>
+                </View>
+                <TouchableOpacity style={styles.button} onPress={() => handleAttendPress(event)}>
+                  <Text style={styles.buttonText}>Attend</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -89,24 +101,50 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: 'Poppins-Bold',
   },
-  eventBox: {
-    backgroundColor: '#fff',
+  card: {
     borderRadius: 10,
+    elevation: 4,
+    backgroundColor: 'white',
+    marginBottom:14,
+    
+    overflow: 'hidden',
+  },
+  cardContent: {
     padding: 15,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  eventTitle: {
-    fontSize: 18,
-    fontFamily: 'Poppins-Bold',
-    marginBottom: 5,
+  contentTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
   },
-  eventDetails: {
+  contentText: {
+    fontSize: 16,
+    color: '#666',
+    marginVertical: 2,
+  },
+  detailsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  contentDetails: {
     fontSize: 14,
-    color: '#555',
+    color: '#999',
+    marginVertical: 2,
+  },
+  cardImage: {
+    width: '100%',
+    height: 200,
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'white',
   },
 });
