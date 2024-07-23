@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -48,9 +47,13 @@ function EventList({ navigation }) {
 export default function EventAttendance() {
   return (
     <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="EventList">
-        <Stack.Screen name="EventList" component={EventList}/>
-        <Stack.Screen name="EventDetail" component={EventDetail} options={{ title: 'Event Details' }} />
+      <Stack.Navigator>
+        <Stack.Screen 
+          name="EventList" 
+          component={EventList} 
+          options={{ headerShown: false }} // Hide the header
+        />
+        <Stack.Screen name="EventDetail" component={EventDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -72,13 +75,14 @@ const styles = StyleSheet.create({
   },
   contentTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
     color: '#333',
   },
   contentText: {
     fontSize: 16,
     color: '#666',
-    marginVertical: 2,
+    fontFamily:'Poppins-Normal',
+    marginVertical: 0,
   },
   detailsContainer: {
     flexDirection: 'row',
@@ -98,11 +102,13 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#007BFF',
     paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
+    paddingHorizontal: 16,
+    borderRadius: 25,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 15,
     color: 'white',
+    fontFamily:'Poppins-Bold',
+    alignItems:'center'
   },
 });

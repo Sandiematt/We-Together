@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
     fontFamily:'Poppins-Normal'
   },
   button: {
-    paddingVertical: 10.8,
-    paddingHorizontal: 18,
+    paddingVertical: 8,
+    paddingHorizontal: 13,
     borderRadius: 45,
     backgroundColor: '#4c8bf5',
   },
