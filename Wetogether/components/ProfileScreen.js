@@ -1,109 +1,125 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity} from 'react-native';
-import bgImage from '../assets/profile_bg.png';
-import { AntDesign } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, StyleSheet, Image, Text, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
 
-export default function ProfileScreen({ navigation }) {
+const ProfileScreen = () => {
   return (
-    <ScrollView>
-    <ImageBackground source={bgImage} style={styles.bgImage}>
-      <View style={styles.container}>
-        <View style={styles.icons}>
-          <TouchableOpacity style={styles.edit}>
-            <AntDesign name="edit" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-        
-        <View style={styles.middle}>
-          <View style={styles.imageContainer}>
-            <Image source={require("../assets/profile_user.jpg")} style={styles.image} />
-            <Text style={styles.font}>John Doe</Text>
-            <Text>hello@gmail.com</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.headerContainer}>
+        <ImageBackground
+          source={require('../assets/circles.png')}
+          style={styles.header}
+          imageStyle={styles.backgroundImage}
+        >
+          <Image
+            source={require('../assets/profile_user.jpg')}
+            style={styles.profileImage}
+          />
+        </ImageBackground>
+        <View style={styles.card}>
+          <View style={styles.cardItem}>
+            <Text style={styles.label}>Name:</Text>
+            <Text style={styles.value}>John Doe</Text>
+          </View>
+          <View style={styles.line} />
+          <View style={styles.cardItem}>
+            <Text style={styles.label}>Email:</Text>
+            <Text style={styles.value}>johndoe@example.com</Text>
+          </View>
+          <View style={styles.line} />
+          <View style={styles.cardItem}>
+            <Text style={styles.label}>Phone:</Text>
+            <Text style={styles.value}>+1234567890</Text>
+          </View>
+          <View style={styles.line} />
+          <View style={styles.cardItem}>
+            <Text style={styles.label}>Address:</Text>
+            <Text style={styles.value}>123 Main St, City, Country</Text>
           </View>
         </View>
-
-        <View Style={styles.bottomContainer}>
-          <View style={styles.card}>
-            <Text style={styles.cardText}>Name: John Doe</Text>
-            <Text style={styles.cardText}>Email: hello@gmail.com</Text>
-            <Text style={styles.cardText}>Mobile No: 1234567890</Text>
-            <Text style={styles.cardText}>Aadhar Number: 1234-5678-9012</Text>
-          </View>
-        </View>
-
-        <View style={styles.signOutContainer}>
-          <TouchableOpacity style={styles.signOutButton}  >
-            <Text style={styles.signOutText}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-
       </View>
-    </ImageBackground>
+      <TouchableOpacity style={styles.logoutButton}>
+        <Text style={styles.logoutButtonText}>Log Out</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  bgImage: {
-    flex: 1,
-    resizeMode: "cover",
-  },
   container: {
-    marginHorizontal: 20,
-    marginTop: 10,
+    flexGrow: 1,
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
   },
-  icons: {
-    flexDirection: 'row',
-    marginTop: 20,
+  headerContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 20,
   },
-  edit: {
-    paddingLeft: 320,
-  },
-  middle: {
-    marginTop: 30,
-  },
-  imageContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 5,
-  },
-  font: {
-    fontSize: 16,
-    color: "white",
-    fontWeight: "bold",
-  },
-  card:{
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    padding:30,
-    marginTop:50,
-    borderRadius:10,
-    alignItems:"left"
-  },
-  cardText:{
-    fontSize: 16,
-    color: '#333',
-    marginVertical: 5,
-  },
-  signOutContainer: {
+  header: {
+    backgroundColor: '#064878',
+    width: '100%',
+    height: '75%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
-  signOutButton: {
-    backgroundColor: '#ff5757',
-    marginTop:160,
+  backgroundImage: {
+    resizeMode: 'cover',
+    opacity: 0.5, 
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: '#fff',
+  },
+  card: {
+    position: 'absolute',
+    top: 300,
+    width: '90%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  cardItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  label: {
+    fontSize: 18,
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  value: {
+    fontSize: 18,
+    color: '#333',
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#ccc',
+    marginVertical: 5,
+  },
+  logoutButton: {
+    marginTop: 90,
+    backgroundColor: '#ed1c1c',
     paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+    paddingHorizontal: 40,
+    borderRadius: 35,
+    alignItems: 'center',
   },
-  signOutText: {
-    color: 'white',
-    fontSize: 16,
+  logoutButtonText: {
+    fontSize: 18,
+    color: '#fff',
     fontWeight: 'bold',
   },
 });
+
+export default ProfileScreen;
