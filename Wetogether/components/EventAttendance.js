@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/FontAwesome'
 import EventDetail from './EventDetail';
 
 const events = [
@@ -29,9 +30,9 @@ function EventList({ navigation }) {
             <Text style={styles.contentTitle}>{event.title}</Text>
             <Text style={styles.contentText}>{event.content}</Text>
             <View style={styles.detailsContainer}>
-              <View>
-                <Text style={styles.contentDetails}>Venue: {event.venue}</Text>
-                <Text style={styles.contentDetails}>Date: {event.date}</Text>
+              <View>  
+                <Text style={styles.contentDetails}><Icon name="map-marker" size={14} color="#999" />  Venue: {event.venue}</Text>
+                <Text style={styles.contentDetails}><Icon name="calendar" size={14} color="#999" /> Date: {event.date}</Text>
               </View>
               <TouchableOpacity style={styles.button} onPress={() => handleAttendPress(event)}>
                 <Text style={styles.buttonText}>Attend</Text>
