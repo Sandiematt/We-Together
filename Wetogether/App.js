@@ -45,7 +45,7 @@ export default function App() {
       >
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="Event Attendance" component={EventAttendance} />
+        <Drawer.Screen name="Events" component={EventAttendance} />
         <Drawer.Screen name="Loan Request" component={LoanRequest} />
         <Drawer.Screen name="About Us" component={AboutUs} />
       </Drawer.Navigator>

@@ -96,11 +96,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     color: '#333',
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
+    top:5,
+    
   },
   value: {
     fontSize: 18,
     color: '#333',
+    top:5,
   },
   line: {
     height: 1,
@@ -116,9 +119,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoutButtonText: {
-    fontSize: 18,
+    fontSize: 15,
     color: '#fff',
-    fontWeight: 'bold',
+    
+    fontFamily:"Poppins-Bold"
   },
 });
 

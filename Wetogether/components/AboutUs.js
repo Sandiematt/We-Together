@@ -1,21 +1,21 @@
-import React, { useEffect } from 'react';
-import { View, Text, ScrollView,  Dimensions, Image, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { View, Text, ScrollView, Dimensions, Image, StyleSheet } from 'react-native';
+
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 export default function AboutUs() {
-    const navigation = useNavigation();
+   
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>About Us</Text>
-                <Image  style={styles.icon} /> 
+                <Image style={styles.icon} />
             </View>
 
             <View style={styles.developersSection}>
-                <Text style={styles.developersTitle}> Developers</Text>
+                <Text style={styles.developersTitle}>Developers</Text>
                 <View style={styles.developersList}>
                     <View style={styles.developerContainer}>
                         <Image style={styles.dev} />
@@ -26,16 +26,16 @@ export default function AboutUs() {
                         <Text style={styles.devName}>Greeshma Girish C</Text>
                     </View>
                     <View style={styles.developerContainer}>
-                        <Image  style={styles.dev} />
+                        <Image style={styles.dev} />
                         <Text style={styles.devName}>Abraham Richard</Text>
                     </View>
                 </View>
             </View>
 
             <View style={styles.box}>
-                <ScrollView contentContainerStyle={{ height: height }} showsVerticalScrollIndicator={false}>
+                <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
                     <Text style={styles.aboutText}>
-                        */here goes the about
+                        Here goes the about text.
                     </Text>
                 </ScrollView>
             </View>
@@ -46,8 +46,6 @@ export default function AboutUs() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
         backgroundColor: 'white',
     },
     header: {
@@ -58,71 +56,45 @@ const styles = StyleSheet.create({
         marginTop: 20,
         width: width,
     },
-    backButton: {
-        marginLeft: 20,
-        marginTop: 15,
-        justifyContent: 'center',
-        alignContent: 'center',
-        elevation: 8,
-        width: 45,
-        height: 45,
-        borderRadius: 50,
-        backgroundColor: 'white',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 5,
-    },
-    backButtonImage: {
-        height: 20,
-        width: 20,
-        alignSelf: 'center',
-    },
     title: {
-      
         fontSize: 30,
         color: 'black',
-        marginTop: 0,
-        marginBottom:80,
-        marginLeft: 130,
-        fontFamily:'Poppins-Bold',
+        left:110,
+        fontFamily: 'Poppins-Bold',
     },
     icon: {
         height: 100,
         width: 100,
-        marginTop: 10,
+        marginRight: 20,
     },
     developersSection: {
-        height: 150,
         width: width,
         alignSelf: 'center',
+        marginTop: 20,
     },
     developersTitle: {
-        
         fontSize: 20,
         marginLeft: 20,
-        color: "black",
-        fontFamily:'Poppins-Bold',
+        color: 'black',
+        fontFamily: 'Poppins-Bold',
     },
     developersList: {
         flexDirection: 'row',
-        marginLeft: "2.3%",
+        justifyContent: 'space-around',
+        marginTop: 10,
     },
     developerContainer: {
-        flexDirection: 'column',
+        alignItems: 'center',
     },
     dev: {
         height: 100,
         width: 100,
-        marginTop: 10,
-        marginLeft: 20,
         borderRadius: 50,
     },
     devName: {
         fontSize: 15,
-        alignSelf: 'center',
-        marginLeft: 20,
         marginTop: 5,
-        color: "black",
+        color: 'black',
     },
     box: {
         width: '90%',
@@ -138,10 +110,12 @@ const styles = StyleSheet.create({
         marginTop: 25,
         alignSelf: 'center',
     },
+    scrollView: {
+        flexGrow: 1,
+    },
     aboutText: {
         fontSize: 15,
         lineHeight: 23,
         color: '#000',
-        
     },
 });

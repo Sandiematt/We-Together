@@ -1,150 +1,126 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const events = [
-  { title: 'Pottery Workshop', content: 'Learn the art of pottery.', venue: 'Art Center', date: '2024-07-20' },
-  { title: 'Yoga Retreat', content: 'Relax and rejuvenate.', venue: 'Wellness Spa', date: '2024-07-25' },
-  { title: 'Cooking Class', content: 'Master the art of Italian cuisine.', venue: 'Cooking Studio', date: '2024-07-28' },
+  { id: '1', title: 'Community Clean-Up', date: 'July 30, 2024' },
+  { id: '2', title: 'Charity Run', date: 'August 12, 2024' },
 ];
 
-export default function HomeScreen({ navigation }) {
-  const goToProfile = () => {
-    navigation.navigate('Profile');
-  };
-
-  const handleAttendPress = (event) => {
-    // Handle event attendance logic here
-    console.log(`Attending event: ${event.title}`);
-  };
-
+const HomeScreen = ({navigation}) => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.greetingText}>Hello User!</Text>
-        <TouchableOpacity style={styles.profileButton} onPress={goToProfile}>
-          <Image
-            source={require('../assets/right-arrow.png')} 
-            style={styles.profileButtonImage}
-          />
+        <Text style={styles.headerText}>Hi, User...</Text>
+        <Text style={styles.subHeaderText}>Welcome to We-Together</Text>
+        <View style={styles.searchContainer}>
+          <TextInput placeholder="Search Here..." style={styles.searchInput} />
+          <Icon name="search" size={20} color="#000" />
+        </View>
+        <TouchableOpacity style={styles.startLearningButton} onPress={() => navigation.navigate('Events')}>
+          <Text style={styles.startLearningText}>Explore New Events</Text>
         </TouchableOpacity>
       </View>
-      <Image
-        source={require('../assets/main_profile.png')}
-        style={styles.profileIcon}
-      />
-      <View style={styles.eventsContainer}>
-        <Text style={styles.eventsTitle}>Upcoming Events..</Text>
-        {events.map((event, index) => (
-          <View style={styles.card} key={index}>
-            <Image
-              style={styles.cardImage}
-              source={{ uri: `https://picsum.photos/700?random=${index}`}}
-            />
-            <View style={styles.cardContent}>
-              <Text style={styles.contentTitle}>{event.title}</Text>
-              <Text style={styles.contentText}>{event.content}</Text>
-              <View style={styles.detailsContainer}>
-                <View>
-                  <Text style={styles.contentDetails}>Venue: {event.venue}</Text>
-                  <Text style={styles.contentDetails}>Date: {event.date}</Text>
-                </View>
-                <TouchableOpacity style={styles.button} onPress={() => handleAttendPress(event)}>
-                  <Text style={styles.buttonText}>Attend</Text>
-                </TouchableOpacity>
-              </View>
+      <Text style={styles.sectionTitle}>Upcoming Events...</Text>
+      <FlatList
+        data={events}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.courseContainer}>
+            <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.courseImage} />
+            <View style={styles.courseDetails}>
+              <Text style={styles.courseTitle}>{item.title}</Text>
+              <Text style={styles.courseLessons}>{item.date}</Text>
             </View>
+            <TouchableOpacity style={styles.playButton}>
+              <Icon name="calendar" size={20} color="#000" />
+            </TouchableOpacity>
           </View>
-        ))}
-      </View>
-    </ScrollView>
+        )}
+      />
+    </View>
   );
-}
-
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: 20,
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
   header: {
+    padding: 20,
+    backgroundColor: '#5A67D8',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  headerText: {
+    fontSize: 30,
+    color: '#fff',
+    top:10,
+    fontFamily:'Poppins-Bold',
+  },
+  subHeaderText: {
+    fontSize: 16,
+    color: '#fff',
+    marginVertical: 10,
+    
+    fontFamily:'Poppins-Normal'
+  },
+  searchContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',
-    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 18,
+    fontFamily:'Poppins-Normal',
   },
-  greetingText: {
-    fontSize: 24,
-    fontFamily: 'Poppins-Bold',
+  searchInput: {
+    flex: 1,
+    height: 50,
   },
-  profileIcon: {
-    width: 150,
-    height: 150,
+  startLearningButton: {
+    backgroundColor: '#E53E3E',
     borderRadius: 50,
-    marginVertical: 20,
-  },
-  profileButton: {
     padding: 10,
-  },
-  profileButtonImage: {
-    width: 25, 
-    height: 25, 
-  },
-  eventsContainer: {
-    width: '100%',
     marginTop: 20,
   },
-  eventsTitle: {
-    fontSize: 25,
-    marginBottom: 20,
-    fontFamily: 'Poppins-Bold',
+  startLearningText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontFamily:'Poppins-Bold',
   },
-  card: {
-    borderRadius: 10,
-    elevation: 4,
-    backgroundColor: 'white',
-    marginBottom:14,
+  sectionTitle: {
+    fontSize: 23,
     
-    overflow: 'hidden',
+    marginVertical: 20,
+    marginHorizontal: 20,
+    fontFamily:'Poppins-Bold',
   },
-  cardContent: {
-    padding: 15,
-  },
-  contentTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  contentText: {
-    fontSize: 16,
-    color: '#666',
-    marginVertical: 2,
-  },
-  detailsContainer: {
+  courseContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    backgroundColor: '#F2F4F3',
+    padding: 30,
+    marginHorizontal: 15,
+    
+    borderRadius: 10,
+    marginBottom: 20,
   },
-  contentDetails: {
-    fontSize: 14,
-    color: '#999',
-    marginVertical: 2,
+  courseImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
   },
-  cardImage: {
-    width: '100%',
-    height: 200,
+  courseDetails: {
+    flex: 1,
+    marginLeft:10,
   },
-  button: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-  },
-  buttonText: {
+  courseTitle: {
     fontSize: 16,
-    color: 'white',
+    fontFamily:'Poppins-Bold',
   },
+  
+  
+  
 });
+
+export default HomeScreen;
