@@ -1,71 +1,94 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 export default function EventDetail({ route }) {
-  const { event } = route.params;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [age, setAge] = useState('');
-  const [contact, setContact] = useState('');
-  const [selectedGender, setSelectedGender] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [zipCode, setZipCode] = useState('');
+
+  const handleSubmit = () => {
+    // Add your submit logic here
+    console.log('Form submitted');
+  };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <Text style={styles.label}>Name : </Text>
       <TextInput
         style={styles.input}
-        onChangeText={setName}
         value={name}
-        placeholder='Name'
+        onChangeText={setName}
       />
+      <Text style={styles.label}>Email :</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setEmail}
         value={email}
-        placeholder='Email'
+        onChangeText={setEmail}
       />
-      <Picker
-        selectedValue={selectedGender}
-        onValueChange={(itemValue) => setSelectedGender(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Select Gender" value="" />
-        <Picker.Item label="Male" value="Male" />
-        <Picker.Item label="Female" value="Female" />
-      </Picker>
+      <Text style={styles.label}>Phone :</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setAge}
-        value={age}
-        placeholder='Age'
+        value={phone}
+        onChangeText={setPhone}
       />
+      <Text style={styles.label}>Address :</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setContact}
-        value={contact}
-        placeholder='Mobile No'
+        value={address}
+        onChangeText={setAddress}
       />
-    </View>
+      <Text style={styles.label}>Zip code :</Text>
+      <TextInput
+        style={styles.input}
+        value={zipCode}
+        onChangeText={setZipCode}
+      />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSubmit}
+        >
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
     backgroundColor: '#fff',
   },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: '#B2B2B2',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-  },
-  picker: {
-    height: 50,
-    width: '100%',
     marginBottom: 20,
+    paddingLeft: 8,
+    backgroundColor:'#F6F6F6',
+  },
+  buttonContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight:'bold',
   },
 });
