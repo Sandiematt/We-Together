@@ -31,7 +31,6 @@ export default function AboutUs() {
                     </View>
                 </View>
             </View>
-
             <View style={styles.box}>
                 <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
                     <Text style={styles.aboutText}>
