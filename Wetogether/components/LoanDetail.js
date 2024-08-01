@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
-export default function EventDetail({ route }) {
+export default function LoanDetail({ route }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -39,7 +39,7 @@ export default function EventDetail({ route }) {
         value={address}
         onChangeText={setAddress}
       />
-      <Text style={styles.label}>Zip code :</Text>
+      <Text style={styles.label}>Adhaar No:</Text>
       <TextInput
         style={styles.input}
         value={zipCode}
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
     marginBottom: 5,
   },
   input: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
-    fontWeight:'bold',
+    fontSize: 15,
+    fontFamily:'Poppins-Bold',
   },
 });

@@ -7,7 +7,9 @@ import CustomDrawerContent from './components/CustomDrawerContent';
 import HomeScreen from './components/HomeScreen';
 import ProfileScreen from './components/ProfileScreen';
 import EventAttendance from './components/EventAttendance';
+import LoanStatus from './components/LoanStatus';
 import LoanRequest from './components/LoanRequest';
+
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 
@@ -47,6 +49,7 @@ export default function App() {
         <Drawer.Screen name="Profile" component={ProfileScreen} />
         <Drawer.Screen name="Events" component={EventAttendance} />
         <Drawer.Screen name="Loan Request" component={LoanRequest} />
+        <Drawer.Screen name="Loan Status" component={LoanStatus} />
         <Drawer.Screen name="About Us" component={AboutUs} />
       </Drawer.Navigator>
       <StatusBar style="auto" />

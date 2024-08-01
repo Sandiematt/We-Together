@@ -1,9 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/FontAwesome'
-import EventDetail from './EventDetail';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const events = [
   { title: 'Pottery Workshop', content: 'Learn the art of pottery.', venue: 'Art Center', date: '2024-07-20'},
@@ -11,30 +8,24 @@ const events = [
   { title: 'Cooking Class', content: 'Master the art of Italian cuisine.', venue: 'Cooking Studio', date: '2024-07-28' },
 ];
 
-const Stack = createStackNavigator();
-
-function EventList({ navigation }) {
-  const handleAttendPress = (event) => {
-    navigation.navigate('EventDetail', { event });
-  };
-
+export default function EventAttendance() {
   return (
     <ScrollView style={styles.container}>
       {events.map((event, index) => (
         <View style={styles.card} key={index}>
           <Image
             style={styles.cardImage}
-            source={{ uri: `https://picsum.photos/700?random=${index}`}}
+            source={{ uri: `https://picsum.photos/700?random=${index}` }}
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
             <Text style={styles.contentText}>{event.content}</Text>
             <View style={styles.detailsContainer}>
-              <View>  
+              <View>
                 <Text style={styles.contentDetails}><Icon name="map-marker" size={14} color="#999" />  Venue: {event.venue}</Text>
                 <Text style={styles.contentDetails}><Icon name="calendar" size={14} color="#999" /> Date: {event.date}</Text>
               </View>
-              <TouchableOpacity style={styles.button} onPress={() => handleAttendPress(event)}>
+              <TouchableOpacity style={styles.button} onPress={() => { /* Add your event handling logic here */ }}>
                 <Text style={styles.buttonText}>Attend</Text>
               </TouchableOpacity>
             </View>
@@ -42,21 +33,6 @@ function EventList({ navigation }) {
         </View>
       ))}
     </ScrollView>
-  );
-}
-
-export default function EventAttendance() {
-  return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator>
-        <Stack.Screen 
-          name="EventList" 
-          component={EventList} 
-          options={{ headerShown: false }} // Hide the header
-        />
-        <Stack.Screen name="EventDetail" component={EventDetail} />
-      </Stack.Navigator>
-    </NavigationContainer>
   );
 }
 
@@ -76,13 +52,13 @@ const styles = StyleSheet.create({
   },
   contentTitle: {
     fontSize: 24,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
     color: '#333',
   },
   contentText: {
     fontSize: 16,
     color: '#666',
-    fontFamily:'Poppins-Normal',
+    fontFamily: 'Poppins-Normal',
     marginVertical: 0,
   },
   detailsContainer: {
@@ -109,7 +85,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 15,
     color: 'white',
-    fontFamily:'Poppins-Bold',
-    alignItems:'center'
+    fontFamily: 'Poppins-Bold',
+    alignItems: 'center'
   },
 });
