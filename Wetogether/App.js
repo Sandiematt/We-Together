@@ -12,6 +12,9 @@ import LoanRequest from './components/LoanRequest';
 
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
+import JobList from './components/Jobs';
+import Community from './components/community';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -48,8 +51,10 @@ export default function App() {
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
         <Drawer.Screen name="Events" component={EventAttendance} />
+        <Drawer.Screen name="Jobs" component={JobList} />
         <Drawer.Screen name="Loan Request" component={LoanRequest} />
         <Drawer.Screen name="Loan Status" component={LoanStatus} />
+        <Drawer.Screen name="Forum" component={Community} />
         <Drawer.Screen name="About Us" component={AboutUs} />
       </Drawer.Navigator>
       <StatusBar style="auto" />
