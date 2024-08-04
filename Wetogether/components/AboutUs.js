@@ -1,12 +1,23 @@
-import React from 'react';
-import { View, Text, ScrollView, Dimensions, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, Dimensions, Image, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 
+// Import the images
+import SandeepImage from '../assets/sandeep.jpg';
+import GreeshmaImage from '../assets/greeshma.jpg';
+import AbrahamImage from '../assets/abraham.jpg';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 export default function AboutUs() {
-   
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const handleImagePress = (image) => {
+        setSelectedImage(image);
+        setModalVisible(true);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -17,27 +28,53 @@ export default function AboutUs() {
             <View style={styles.developersSection}>
                 <Text style={styles.developersTitle}>Developers</Text>
                 <View style={styles.developersList}>
-                    <View style={styles.developerContainer}>
-                        <Image style={styles.dev} />
-                        <Text style={styles.devName}>Sandeep Mathew</Text>
-                    </View>
-                    <View style={styles.developerContainer}>
-                        <Image style={styles.dev} />
-                        <Text style={styles.devName}>Greeshma Girish C</Text>
-                    </View>
-                    <View style={styles.developerContainer}>
-                        <Image style={styles.dev} />
-                        <Text style={styles.devName}>Abraham Richard</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => handleImagePress(SandeepImage)}>
+                        <View style={styles.developerContainer}>
+                            <Image style={styles.dev} source={SandeepImage} />
+                            <Text style={styles.devName}>Sandeep Mathew</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleImagePress(GreeshmaImage)}>
+                        <View style={styles.developerContainer}>
+                            <Image style={styles.dev} source={GreeshmaImage} />
+                            <Text style={styles.devName}>Greeshma Girish</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleImagePress(AbrahamImage)}>
+                        <View style={styles.developerContainer}>
+                            <Image style={styles.dev} source={AbrahamImage} />
+                            <Text style={styles.devName}>Abraham Richard</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.box}>
-                <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
+                <ScrollView >
                     <Text style={styles.aboutText}>
-                        Here goes the about text.
+                    We Together aims to address these challenges by establishing a robust self-help group
+(SHG) platform that prioritizes women's empowerment while including men. The
+initiative seeks to provide a supportive ecosystem where women can develop
+entrepreneurial skills, access financial resources, and participate actively in decisionmaking processes. By leveraging the collective strength of SHGs, 'We Together' aims to
+foster economic independence and social cohesion among participants.
                     </Text>
                 </ScrollView>
             </View>
+            {selectedImage && (
+                <Modal
+                    visible={modalVisible}
+                    transparent={true}
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                            style={styles.modalBackground}
+                            onPress={() => setModalVisible(false)}
+                        >
+                            <Image style={styles.fullScreenImage} source={selectedImage} />
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
+            )}
         </View>
     );
 }
@@ -58,7 +95,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         color: 'black',
-        left:110,
+        left: 110,
         fontFamily: 'Poppins-Bold',
     },
     icon: {
@@ -81,6 +118,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginTop: 10,
+        
     },
     developerContainer: {
         alignItems: 'center',
@@ -91,9 +129,10 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     devName: {
-        fontSize: 15,
+        fontSize: 13,
         marginTop: 5,
         color: 'black',
+        fontFamily:'Poppins-Normal',
     },
     box: {
         width: '90%',
@@ -109,12 +148,30 @@ const styles = StyleSheet.create({
         marginTop: 25,
         alignSelf: 'center',
     },
-    scrollView: {
+    scrollViewContent: {
         flexGrow: 1,
     },
     aboutText: {
         fontSize: 15,
         lineHeight: 23,
         color: '#000',
+        fontFamily:'Poppins-Normal',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    },
+    modalBackground: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    fullScreenImage: {
+        width: '90%',
+        height: '90%',
+        resizeMode: 'contain',
     },
 });

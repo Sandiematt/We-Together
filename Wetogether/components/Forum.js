@@ -179,13 +179,13 @@ const styles = StyleSheet.create({
   },
   postButton: {
     backgroundColor: '#E53E3E',
-    padding: 15,
+    padding:13,
     borderRadius: 10,
     alignItems: 'center',
   },
   postButtonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
   },
   iconButton: {
     marginRight: 10,
@@ -200,10 +200,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   username: {
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
   },
   content: {
     marginVertical: 10,
+    fontFamily:'Poppins-Normal',
   },
   image: {
     width: '100%',
