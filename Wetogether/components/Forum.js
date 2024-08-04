@@ -10,7 +10,6 @@ const Forum = () => {
     {
       id: '1',
       user: 'Jessica Wang',
-      time: '28 minutes ago',
       content: 'Just had my annual checkup, and my cholesterol levels are higher than I expected. Any tips on lowering it?',
       image: null,
       likes: 12023,
@@ -18,12 +17,10 @@ const Forum = () => {
     {
       id: '2',
       user: 'Wade Warren',
-      time: '58 minutes ago',
       content: 'Good morning everyone! Starting my day with a nutritious breakfast and a quick jog. Remember, small steps lead to big changes! #HealthyLiving',
       image: 'https://example.com/breakfast.jpg',
       likes: 19028,
     },
-    // Add more posts as needed
   ]);
 
   // Request permission to access the media library
@@ -31,36 +28,35 @@ const Forum = () => {
     if (Platform.OS === 'android') {
       return await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        {
-          title: "Permission Explanation",
-          message: "App needs to access your photos",
-        }
       );
     }
   };
 
   // Handle image selection from the gallery
   const handleSelectImage = async () => {
-    const permission = await requestPermission();
-    if (permission === PermissionsAndroid.RESULTS.GRANTED || Platform.OS === 'ios') {
-      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (permissionResult.granted === false) {
-        alert("Permission to access camera roll is required!");
+    if (Platform.OS === 'android') {
+      const permission = await requestPermission();
+      if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+        alert("Permission denied");
         return;
       }
+    }
+    
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 1,
-      });
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
 
-      if (!pickerResult.cancelled) {
-        setNewImage(pickerResult.uri);
-      }
-    } else {
-      alert("Permission denied");
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!pickerResult.canceled) {
+      setNewImage(pickerResult.assets[0].uri);
     }
   };
 
@@ -69,8 +65,7 @@ const Forum = () => {
     if (newPost.trim() || newImage) {
       const newPostData = {
         id: (posts.length + 1).toString(),
-        user: 'Current User', // Replace with actual user data
-        time: 'Just now',
+        user: 'Current User', 
         content: newPost,
         image: newImage,
         likes: 0,
@@ -81,12 +76,10 @@ const Forum = () => {
     }
   };
 
-  // Render individual post
   const renderPost = ({ item }) => (
     <View style={styles.postContainer}>
       <View style={styles.header}>
         <Text style={styles.username}>{item.user}</Text>
-        <Text style={styles.time}>{item.time}</Text>
       </View>
       <Text style={styles.content}>{item.content}</Text>
       {item.image && <Image source={{ uri: item.image }} style={styles.image} />}
@@ -112,22 +105,18 @@ const Forum = () => {
           <FontAwesome name="camera" size={24} color="blue" />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.postButton, newPost.trim() || newImage ? styles.postButtonActive : styles.postButtonInactive]}
+          style={[styles.postButton, (newPost.trim() || newImage) ? styles.postButtonActive : styles.postButtonInactive]}
           onPress={handlePost}
           disabled={!newPost.trim() && !newImage}
         >
           <Text style={styles.postButtonText}>Post</Text>
         </TouchableOpacity>
       </View>
+      {newImage && <Image source={{ uri: newImage }} style={styles.selectedImage} />}
       <FlatList
         data={posts}
         renderItem={renderPost}
         keyExtractor={item => item.id}
-        ListHeaderComponent={
-          <View style={styles.trendingContainer}>
-            <Text style={styles.trendingText}>Trending Thread</Text>
-          </View>
-        }
       />
     </View>
   );
@@ -168,13 +157,6 @@ const styles = StyleSheet.create({
   postButtonText: {
     color: '#fff',
   },
-  trendingContainer: {
-    padding: 10,
-    backgroundColor: '#d3e3ff',
-  },
-  trendingText: {
-    fontWeight: 'bold',
-  },
   postContainer: {
     padding: 10,
     backgroundColor: '#fff',
@@ -186,9 +168,6 @@ const styles = StyleSheet.create({
   },
   username: {
     fontWeight: 'bold',
-  },
-  time: {
-    color: '#777',
   },
   content: {
     marginVertical: 10,
@@ -209,6 +188,12 @@ const styles = StyleSheet.create({
   },
   likesCount: {
     marginLeft: 5,
+  },
+  selectedImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+    alignSelf: 'center',
   },
 });
 
