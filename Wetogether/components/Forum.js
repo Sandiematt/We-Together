@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, FlatList, StyleSheet, Platform, PermissionsAndroid } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // For Expo projects
-import { FontAwesome } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Forum = () => {
   const [newPost, setNewPost] = useState('');
@@ -11,19 +11,18 @@ const Forum = () => {
       id: '1',
       user: 'Jessica Wang',
       content: 'Just had my annual checkup, and my cholesterol levels are higher than I expected. Any tips on lowering it?',
-      image: null,
-      likes: 12023,
+      image: 'https://www.sportico.com/wp-content/uploads/2020/09/0911_IMG.jpg',
+      likes: [], 
     },
     {
       id: '2',
       user: 'Wade Warren',
       content: 'Good morning everyone! Starting my day with a nutritious breakfast and a quick jog. Remember, small steps lead to big changes! #HealthyLiving',
-      image: 'https://example.com/breakfast.jpg',
-      likes: 19028,
+      image: 'https://www.sportico.com/wp-content/uploads/2020/09/0911_IMG.jpg',
+      likes: [], 
     },
   ]);
 
-  // Request permission to access the media library
   const requestPermission = async () => {
     if (Platform.OS === 'android') {
       return await PermissionsAndroid.request(
@@ -32,7 +31,6 @@ const Forum = () => {
     }
   };
 
-  // Handle image selection from the gallery
   const handleSelectImage = async () => {
     if (Platform.OS === 'android') {
       const permission = await requestPermission();
@@ -60,7 +58,6 @@ const Forum = () => {
     }
   };
 
-  // Handle posting new content
   const handlePost = () => {
     if (newPost.trim() || newImage) {
       const newPostData = {
@@ -68,12 +65,20 @@ const Forum = () => {
         user: 'Current User', 
         content: newPost,
         image: newImage,
-        likes: 0,
+        likes: [], // Initialize likes array for new post
       };
       setPosts([newPostData, ...posts]);
       setNewPost('');
       setNewImage(null);
     }
+  };
+
+  const handleLike = (postId) => {
+    setPosts(posts.map(post => 
+      post.id === postId 
+        ? { ...post, likes: [...post.likes, 'Current User'] } // Add user to likes array
+        : post
+    ));
   };
 
   const renderPost = ({ item }) => (
@@ -84,9 +89,9 @@ const Forum = () => {
       <Text style={styles.content}>{item.content}</Text>
       {item.image && <Image source={{ uri: item.image }} style={styles.image} />}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.likeButton}>
-          <FontAwesome name="thumbs-up" size={24} color="blue" />
-          <Text style={styles.likesCount}>{item.likes}</Text>
+        <TouchableOpacity style={styles.likeButton} onPress={() => handleLike(item.id)}>
+          <Icon name="heart" size={24} color="red" />
+          <Text style={styles.likesCount}>{item.likes.length}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -94,25 +99,32 @@ const Forum = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.postInputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="What do you think right now?"
-          value={newPost}
-          onChangeText={setNewPost}
-        />
-        <TouchableOpacity style={styles.iconButton} onPress={handleSelectImage}>
-          <FontAwesome name="camera" size={24} color="blue" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.postButton, (newPost.trim() || newImage) ? styles.postButtonActive : styles.postButtonInactive]}
-          onPress={handlePost}
-          disabled={!newPost.trim() && !newImage}
-        >
-          <Text style={styles.postButtonText}>Post</Text>
-        </TouchableOpacity>
+      {/* Header Section */}
+      <View style={styles.headerContainer}>
+        
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="What do you think right now?"
+            value={newPost}
+            onChangeText={setNewPost}
+          />
+          <TouchableOpacity style={styles.iconButton} onPress={handleSelectImage}>
+            <Icon name="camera" size={30} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.postButton, (newPost.trim() || newImage) ]}
+            onPress={handlePost}
+            disabled={!newPost.trim() && !newImage}
+          >
+            <Text style={styles.postButtonText}>Post</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+      <Text style={styles.postMessage}></Text>
+      <Text style={styles.postMessage}>   New Posts </Text>
       {newImage && <Image source={{ uri: newImage }} style={styles.selectedImage} />}
+      {/* Posts Section */}
       <FlatList
         data={posts}
         renderItem={renderPost}
@@ -127,35 +139,56 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  postInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
+  headerContainer: {
+    backgroundColor: '#024578',
+    padding: 20,
+    paddingTop: 50,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
-  textInput: {
-    flex: 1,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
+  greeting: {
+    fontSize: 26,
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
+  },
+  welcomeMessage: {
+    fontSize: 16,
+    color: 'white',
+    fontFamily:'Poppins-Normal',
+    marginBottom: 10,
+  },
+  postMessage: {
+    fontSize:22,
+    color: 'black',
+    fontFamily:'Poppins-Bold',
+    marginBottom: 10,
     marginRight: 10,
   },
-  iconButton: {
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  searchInput: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
     marginRight: 10,
   },
   postButton: {
-    borderRadius: 5,
-    padding: 10,
-  },
-  postButtonActive: {
-    backgroundColor: '#007bff',
-  },
-  postButtonInactive: {
-    backgroundColor: '#b0c4de',
+    backgroundColor: '#E53E3E',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
   },
   postButtonText: {
-    color: '#fff',
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  iconButton: {
+    marginRight: 10,
   },
   postContainer: {
     padding: 10,
