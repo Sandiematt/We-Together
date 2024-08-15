@@ -35,7 +35,7 @@ const Login = ({ onLoginSuccess, onAdminLogin }) => {
       >
         <View style={styles.innerContainer}>
           <View style={styles.header}>
-            <Image source={require('../assets/main_logo.png')} style={styles.headerImg} />
+            <Image source={require('../../assets/main_logo.png')} style={styles.headerImg} />
             <Text style={styles.title}>Welcome to We-Together</Text>
             <Text style={styles.subtitle}>Community Development App</Text>
           </View>

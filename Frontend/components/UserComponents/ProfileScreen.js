@@ -6,12 +6,12 @@ const ProfileScreen = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <ImageBackground
-          source={require('../assets/circles.png')}
+          source={require('../../assets/circles.png')}
           style={styles.header}
           imageStyle={styles.backgroundImage}
         >
           <Image
-            source={require('../assets/profile_user.jpg')}
+            source={require('../../assets/profile_user.jpg')}
             style={styles.profileImage}
           />
         </ImageBackground>

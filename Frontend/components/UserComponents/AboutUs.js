@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, Dimensions, Image, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 
 // Import the images
-import SandeepImage from '../assets/sandeep.jpg';
-import GreeshmaImage from '../assets/greeshma.jpg';
-import AbrahamImage from '../assets/abraham.jpg';
+import SandeepImage from '../../assets/sandeep.jpg';
+import GreeshmaImage from '../../assets/greeshma.jpg';
+import AbrahamImage from '../../assets/abraham.jpg';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;

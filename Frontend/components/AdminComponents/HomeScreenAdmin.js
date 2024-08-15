@@ -28,7 +28,7 @@ const HomeScreenAdmin = ({navigation}) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.courseContainer}>
-            <Image source={require('../assets/52068.jpg')} style={styles.courseImage} />
+            <Image source={require('../../assets/52068.jpg')} style={styles.courseImage} />
             <View style={styles.courseDetails}>
               <Text style={styles.courseTitle}>{item.title}</Text>
               <Text style={styles.courseLessons}>{item.date}</Text>

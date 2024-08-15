@@ -6,7 +6,7 @@ export default function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.header}>
-        <Image source={require('../assets/main_logo.png')} style={styles.logo} />
+        <Image source={require('../../assets/main_logo.png')} style={styles.logo} />
       </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
