@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Image, Platform, ScrollView } from 'react-native';
 import axios from 'axios';
 
 const Login = ({ onLoginSuccess, onAdminLogin }) => {
@@ -32,51 +32,54 @@ const Login = ({ onLoginSuccess, onAdminLogin }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Adjust if needed
       >
-        <View style={styles.innerContainer}>
-          <View style={styles.header}>
-            <Image source={require('../../assets/main_logo.png')} style={styles.headerImg} />
-            <Text style={styles.title}>Welcome to We-Together</Text>
-            <Text style={styles.subtitle}>Community Development App</Text>
-          </View>
-          <View style={styles.formContainer}>
-            <View style={styles.form}>
-              <View style={styles.input}>
-                <Text style={styles.inputLabel}>Email Address:</Text>
-                <TextInput
-                  autoCapitalize='none'
-                  autoCorrect={false}
-                  keyboardType='email-address'
-                  style={styles.inputText}
-                  placeholder="Username"
-                  placeholderTextColor="#003f5c"
-                  onChangeText={(text) => setUsername(text)}
-                />
-              </View>
-              <View style={styles.input}>
-                <Text style={styles.inputLabel}>Password:</Text>
-                <TextInput
-                  secureTextEntry
-                  style={styles.inputText}
-                  placeholder="Password"
-                  placeholderTextColor="#003f5c"
-                  onChangeText={(text) => setPassword(text)}
-                />
-              </View>
-              <View style={styles.formAction}>
-                <TouchableOpacity onPress={handleLogin}>
-                  <View style={styles.btn}>
-                    <Text style={styles.btnText}>Sign In</Text>
-                  </View>
-                </TouchableOpacity>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.innerContainer}>
+            <View style={styles.header}>
+              <Image source={require('../../assets/main_logo.png')} style={styles.headerImg} />
+              <Text style={styles.title}>Welcome to We-Together</Text>
+              <Text style={styles.subtitle}>Community Development App</Text>
+            </View>
+            <View style={styles.formContainer}>
+              <View style={styles.form}>
+                <View style={styles.input}>
+                  <Text style={styles.inputLabel}>Email Address:</Text>
+                  <TextInput
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    keyboardType='email-address'
+                    style={styles.inputText}
+                    placeholder="Username"
+                    placeholderTextColor="#003f5c"
+                    onChangeText={(text) => setUsername(text)}
+                  />
+                </View>
+                <View style={styles.input}>
+                  <Text style={styles.inputLabel}>Password:</Text>
+                  <TextInput
+                    secureTextEntry
+                    style={styles.inputText}
+                    placeholder="Password"
+                    placeholderTextColor="#003f5c"
+                    onChangeText={(text) => setPassword(text)}
+                  />
+                </View>
+                <View style={styles.formAction}>
+                  <TouchableOpacity onPress={handleLogin}>
+                    <View style={styles.btn}>
+                      <Text style={styles.btnText}>Sign In</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
+            <View style={styles.regBtn}>
+              <Text>Don't have an account?</Text>
+              <Text style={styles.regText} onPress={gotoRegister}>Sign Up</Text>
+            </View>
           </View>
-          <View style={styles.regBtn}>
-            <Text>Don't have an account?</Text>
-            <Text style={styles.regText} onPress={gotoRegister}>Sign Up</Text>
-          </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -92,15 +95,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContainer: {
+    flexGrow: 1,
+  },
   innerContainer: {
     flex: 1,
-    
     padding: 24,
   },
   header: {
     alignItems: 'center',
-    marginTop:90,
-     // Adjust this if needed
+    marginTop: 90,
+    // Adjust this if needed
   },
   headerImg: {
     width: 300,
