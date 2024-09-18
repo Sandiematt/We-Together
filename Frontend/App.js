@@ -65,6 +65,7 @@ export default function App() {
         >
           {isAdmin ? (
             <Drawer.Screen name="HomeAdmin" component={HomeScreenAdmin} />
+            
           ) : (
             <>
               <Drawer.Screen name="Home" component={HomeScreen} />

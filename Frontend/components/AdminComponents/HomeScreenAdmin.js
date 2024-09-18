@@ -1,126 +1,131 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { Icon } from 'react-native-elements';
 
-
-const events = [
-  { id: '1', title: 'Community Clean-Up', date: 'July 30, 2024' },
-  { id: '2', title: 'Charity Run', date: 'August 12, 2024' },
-];
-
-const HomeScreenAdmin = ({navigation}) => {
+export default function HomeScreenAdmin() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Hi, User...</Text>
-        <Text style={styles.subHeaderText}>Welcome to Admin Page</Text>
-        <View style={styles.searchContainer}>
-          <TextInput placeholder="Search Here..." style={styles.searchInput} />
-          <Icon name="search" size={20} color="#000" />
+     
+      {/* User Count Section */}
+      <View style={styles.userCountSection}>
+        <View style={styles.circle}>
+          <Text style={styles.userCountText}>26</Text>
+          <Text style={styles.userText}>Users</Text>
         </View>
-        <TouchableOpacity style={styles.startLearningButton} onPress={() => navigation.navigate('Events')}>
-          <Text style={styles.startLearningText}>Explore New Events</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity style={styles.button}>
+            <Icon name="event" color="black" size={20} />
+            <Text style={styles.buttonText}>Create Event</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button}>
+            <Icon name="add" color="black" size={20} />
+            <Text style={styles.buttonText}>Create Job</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.logoutButton}>
+            <Icon name="logout" color="white" size={20} />
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Text style={styles.sectionTitle}>Upcoming Events...</Text>
-      <FlatList
-        data={events}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.courseContainer}>
-            <Image source={require('../../assets/52068.jpg')} style={styles.courseImage} />
-            <View style={styles.courseDetails}>
-              <Text style={styles.courseTitle}>{item.title}</Text>
-              <Text style={styles.courseLessons}>{item.date}</Text>
-            </View>
-            <TouchableOpacity style={styles.playButton}>
-              <Icon name="calendar" size={20} color="#000" />
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+
+      {/* Upcoming Events Section */}
+      <View style={styles.upcomingEventsSection}>
+        <Text style={styles.upcomingEventsText}>Upcoming Events..</Text>
+        <Image
+          style={styles.noEventsImage}
+          source={{ uri: 'https://img.icons8.com/ios/452/nothing-found.png' }}
+        />
+        <Text style={styles.noEventsText}>No Upcoming Events</Text>
+      </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   header: {
-    padding: 20,
-    backgroundColor: '#5A67D8',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#f8f8f8',
   },
   headerText: {
-    fontSize: 30,
-    color: '#fff',
-    top:10,
-    fontFamily:'Poppins-Bold',
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
-  subHeaderText: {
-    fontSize: 16,
-    color: '#fff',
-    marginVertical: 10,
-    
-    fontFamily:'Poppins-Normal'
-  },
-  searchContainer: {
+  userCountSection: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
+    paddingVertical: 20,
     backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 18,
-    fontFamily:'Poppins-Normal',
   },
-  searchInput: {
-    flex: 1,
-    height: 50,
+  circle: {
+    padding:50,
+    borderRadius: 30,
+    backgroundColor: '#d4f5d6',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  startLearningButton: {
-    backgroundColor: '#E53E3E',
-    borderRadius: 50,
-    padding: 10,
-    marginTop: 20,
+  userCountText: {
+    fontSize: 24,
+    fontWeight: 'bold',
   },
-  startLearningText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontFamily:'Poppins-Bold',
+  userText: {
+    fontSize: 16,
+    color: '#888',
   },
-  sectionTitle: {
-    fontSize: 23,
-
-    marginVertical: 20,
-    marginHorizontal: 20,
-    fontFamily:'Poppins-Bold',
+  buttonsContainer: {
+    justifyContent: 'center',
   },
-  courseContainer: {
+  button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F2F4F3',
-    padding: 30,
-    marginHorizontal: 15,
-    
+    backgroundColor: '#f0f0f0',
+    padding: 10,
     borderRadius: 10,
-    marginBottom: 20,
+    marginVertical: 5,
+    width: 130,
   },
-  courseImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  courseDetails: {
-    flex: 1,
-    marginLeft:10,
-  },
-  courseTitle: {
+  buttonText: {
+    marginLeft: 5,
     fontSize: 16,
-    fontFamily:'Poppins-Bold',
   },
-  
-  
-  
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ff4d4d',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 5,
+    width: 130,
+  },
+  logoutText: {
+    color: 'white',
+    marginLeft: 5,
+    fontSize: 16,
+  },
+  upcomingEventsSection: {
+    alignItems: 'center',
+    paddingVertical: 100,
+  },
+  upcomingEventsText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  noEventsImage: {
+    width: 150,
+    height: 150,
+    marginVertical: 10,
+  },
+  noEventsText: {
+    fontSize: 16,
+    color: '#888',
+  },
 });
-
-export default HomeScreenAdmin;
