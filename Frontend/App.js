@@ -15,15 +15,15 @@ import JobList from './components/UserComponents/Jobs';
 import Forum from './components/UserComponents/Forum';
 import HomeScreenAdmin from './components/AdminComponents/HomeScreenAdmin';
 import Login from './components/UserComponents/login.js';
-
+import Loans from './components/AdminComponents/Loans.js';
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     'Poppins-Bold': require('./fonts/Poppins-Bold.ttf'),
-    'Poppins-Normal': require('./fonts/Poppins-Regular.ttf'),
-    'Poppins-LightBold': require('./fonts/Poppins-SemiBold.ttf')
+    'Poppins-Regular': require('./fonts/Poppins-Regular.ttf'),
+    'Poppins-SemiBold': require('./fonts/Poppins-SemiBold.ttf'),
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,29 +43,31 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null;
+    return null; // Show nothing until fonts are loaded
   }
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
-    setIsAdmin(false);
+    setIsAdmin(false); // Set user as non-admin after login success
   };
 
   const handleAdminLogin = () => {
     setIsAuthenticated(true);
-    setIsAdmin(true);
+    setIsAdmin(true); // Set user as admin after admin login
   };
 
   return (
     <NavigationContainer>
       {isAuthenticated ? (
         <Drawer.Navigator
-          initialRouteName={isAdmin ? "HomeAdmin" : "Home"}
+          initialRouteName={isAdmin ? 'HomeAdmin' : 'Home'}
           drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
           {isAdmin ? (
-            <Drawer.Screen name="HomeAdmin" component={HomeScreenAdmin} />
-            
+            <>
+              <Drawer.Screen name="HomeAdmin" component={HomeScreenAdmin} />
+              <Drawer.Screen name="Loans" component={Loans} />
+            </>
           ) : (
             <>
               <Drawer.Screen name="Home" component={HomeScreen} />
