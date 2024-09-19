@@ -75,11 +75,12 @@ const styles = StyleSheet.create({
   },
   userCountText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
   },
   userText: {
     fontSize: 16,
     color: '#888',
+    fontFamily:'Poppins-Bold',
   },
   buttonsContainer: {
     justifyContent: 'center',
@@ -95,7 +96,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     marginLeft: 5,
-    fontSize: 16,
+    fontSize: 13,
+    fontFamily:'Poppins-Bold',
   },
   logoutButton: {
     flexDirection: 'row',
@@ -108,8 +110,9 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: 'white',
-    marginLeft: 5,
+    marginLeft: 10,
     fontSize: 16,
+    fontFamily:'Poppins-Bold',
   },
   upcomingEventsSection: {
     alignItems: 'center',
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
   },
   upcomingEventsText: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontFamily:'Poppins-Bold',
   },
   noEventsImage: {
     width: 150,
@@ -127,5 +130,6 @@ const styles = StyleSheet.create({
   noEventsText: {
     fontSize: 16,
     color: '#888',
+    fontFamily:'Poppins-Bold',
   },
 });
