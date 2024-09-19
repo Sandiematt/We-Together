@@ -16,6 +16,7 @@ import Forum from './components/UserComponents/Forum';
 import HomeScreenAdmin from './components/AdminComponents/HomeScreenAdmin';
 import Login from './components/UserComponents/login.js';
 import Loans from './components/AdminComponents/Loans.js';
+import AdminJobs from './components/AdminComponents/AdminJobs.js';
 
 const Drawer = createDrawerNavigator();
 
@@ -67,6 +68,7 @@ export default function App() {
             <>
               <Drawer.Screen name="HomeAdmin" component={HomeScreenAdmin} />
               <Drawer.Screen name="Loans" component={Loans} />
+              <Drawer.Screen name="Jobs" component={AdminJobs} />
             </>
           ) : (
             <>

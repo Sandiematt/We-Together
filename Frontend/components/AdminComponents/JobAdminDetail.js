@@ -1,40 +1,39 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-
-const LoanAdminDetail = () => {
-  // Example user data who have taken loans
-  const users = [
-    { id: 1, name: 'anjitha', loanAmount: '$500.00', loanDate: '2023-08-10' },
-    { id: 2, name: 'Hai', loanAmount: '$500.00', loanDate: '2023-08-17' },
-    { id: 3, name: 'eldho', loanAmount: '$417.00', loanDate: '2024-02-11' }
+const JobAdminDetail = () => {
+  // Example job applicants data
+  const applicants = [
+    { id: 1, name: 'Alex', jobTitle: 'Software Engineer', applicationDate: '2023-07-10' },
+    { id: 2, name: 'Maria', jobTitle: 'UI/UX Designer', applicationDate: '2023-08-05' },
+    { id: 3, name: 'John', jobTitle: 'Data Analyst', applicationDate: '2024-02-15' }
   ];
 
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
-     
-      {/* Total Amount and Borrowers */}
+
+      {/* Total Applicants and Job Openings */}
       <View style={styles.overview}>
         <View style={styles.overviewCard}>
-          <Text style={styles.cardTitle}>Total Amount</Text>
-          <Text style={styles.amount}>$7000</Text>
+          <Text style={styles.cardTitle}>Total Job Openings</Text>
+          <Text style={styles.openings}>5</Text>
         </View>
         <View style={styles.overviewCard}>
-          <Text style={styles.cardTitle}>Borrowers</Text>
-          <Text style={styles.borrowers}>3</Text>
+          <Text style={styles.cardTitle}>Applicants</Text>
+          <Text style={styles.applicants}>3</Text>
         </View>
       </View>
 
-      {/* Loan Users List */}
+      {/* Job Applicants List */}
       <View>
-        {users.map((user) => (
-          <View key={user.id} style={styles.loanItem}>
-            <Text style={styles.loanIndex}>{user.id}.</Text>
-            <View style={styles.loanDetails}>
-              <Text style={styles.loanName}>{user.name}</Text>
-              <Text style={styles.loanAmount}>{user.loanAmount}</Text>
-              <Text style={styles.loanDate}>{user.loanDate}</Text>
+        {applicants.map((applicant) => (
+          <View key={applicant.id} style={styles.applicantItem}>
+            <Text style={styles.applicantIndex}>{applicant.id}.</Text>
+            <View style={styles.applicantDetails}>
+              <Text style={styles.applicantName}>{applicant.name}</Text>
+              <Text style={styles.jobTitle}>{applicant.jobTitle}</Text>
+              <Text style={styles.applicationDate}>{applicant.applicationDate}</Text>
             </View>
           </View>
         ))}
@@ -48,22 +47,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 10
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
-    elevation: 2, // For Android shadow
-    shadowColor: '#000', // iOS shadow
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 }
-  },
-  headerText: {
-    fontSize: 18,
-    fontFamily:'Poppins-Bold',
-    marginLeft: 20
   },
   overview: {
     flexDirection: 'row',
@@ -87,20 +70,21 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#333',
     fontFamily:'Poppins-Bold',
+    top:10,
   },
-  amount: {
+  openings: {
     fontSize: 24,
-    color: 'green',
+    color: 'blue',
     fontFamily:'Poppins-Bold',
     marginTop: 10
   },
-  borrowers: {
+  applicants: {
     fontSize: 24,
-    color: 'green',
+    color: 'blue',
     fontFamily:'Poppins-Bold',
-    marginTop: 10
+    marginTop: 27
   },
-  loanItem: {
+  applicantItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
@@ -113,28 +97,27 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 }
   },
-  loanIndex: {
+  applicantIndex: {
     fontSize: 16,
     fontFamily:'Poppins-Bold',
     marginRight: 10
   },
-  loanDetails: {
+  applicantDetails: {
     flex: 1
   },
-  loanName: {
+  applicantName: {
     fontSize: 15,
     fontFamily:'Poppins-Bold',
   },
-  loanAmount: {
+  jobTitle: {
     color: 'green',
     fontSize: 16,
     fontWeight: 'bold',
-    
   },
-  loanDate: {
+  applicationDate: {
     color: 'red',
     marginTop: 5
   }
 });
 
-export default LoanAdminDetail;
+export default JobAdminDetail;
