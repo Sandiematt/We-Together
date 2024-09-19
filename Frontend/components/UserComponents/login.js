@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Image, Platform, ScrollView } from 'react-native';
 import axios from 'axios';
 
-const Login = ({ onLoginSuccess, onAdminLogin }) => {
+const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://192.168.1.11:5000/login', { username, password });
+      const response = await axios.post('https://5f31-36-255-86-44.ngrok-free.app/login', {username, password });
       const user = response.data;
 
       if (user.isAdmin) {
@@ -18,13 +18,12 @@ const Login = ({ onLoginSuccess, onAdminLogin }) => {
         onLoginSuccess();
       }
     } catch (err) {
-      setError('Login failed');
+      setError('Login failed. Please check your credentials.');
     }
   };
 
   const gotoRegister = () => {
-    // Define navigation to registration screen
-    console.log('Navigate to registration screen');
+    navigation.navigate('SignUp'); // Use navigation to go to SignUp screen
   };
 
   return (
@@ -65,6 +64,7 @@ const Login = ({ onLoginSuccess, onAdminLogin }) => {
                     onChangeText={(text) => setPassword(text)}
                   />
                 </View>
+                {error ? <Text style={styles.errorText}>{error}</Text> : null}
                 <View style={styles.formAction}>
                   <TouchableOpacity onPress={handleLogin}>
                     <View style={styles.btn}>
@@ -85,8 +85,6 @@ const Login = ({ onLoginSuccess, onAdminLogin }) => {
   );
 };
 
-export default Login;
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -105,7 +103,6 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginTop: 90,
-    // Adjust this if needed
   },
   headerImg: {
     width: 300,
@@ -125,7 +122,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    justifyContent: 'center', // Centers form vertically
+    justifyContent: 'center',
   },
   form: {
     marginBottom: 24,
@@ -167,11 +164,18 @@ const styles = StyleSheet.create({
   },
   regBtn: {
     alignItems: 'center',
-    marginBottom: 24, // Ensure this is not too close to the bottom
+    marginBottom: 24,
   },
   regText: {
     fontSize: 20,
     textDecorationLine: 'underline',
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    marginVertical: 10,
+    textAlign: 'center',
   }
 });
+
+export default Login;

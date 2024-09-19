@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+
+// Import components
 import AboutUs from './components/UserComponents/AboutUs';
 import CustomDrawerContent from './components/UserComponents/CustomDrawerContent';
 import HomeScreen from './components/UserComponents/HomeScreen';
@@ -9,16 +14,18 @@ import ProfileScreen from './components/UserComponents/ProfileScreen';
 import EventAttendance from './components/UserComponents/EventAttendance';
 import LoanStatus from './components/UserComponents/LoanStatus';
 import LoanRequest from './components/UserComponents/LoanRequest';
-import * as SplashScreen from 'expo-splash-screen';
-import { useFonts } from 'expo-font';
 import JobList from './components/UserComponents/Jobs';
 import Forum from './components/UserComponents/Forum';
 import HomeScreenAdmin from './components/AdminComponents/HomeScreenAdmin';
-import Login from './components/UserComponents/login.js';
-import Loans from './components/AdminComponents/Loans.js';
-import AdminJobs from './components/AdminComponents/AdminJobs.js';
+import Login from './components/UserComponents/login';
+import SignUp from './components/UserComponents/SignUp';
+import Loans from './components/AdminComponents/Loans';
+import AdminJobs from './components/AdminComponents/AdminJobs';
+import AdminEvents from './components/AdminComponents/Events';
+import LoanApprovalDetail from './components/AdminComponents/LoanApproval';
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -68,7 +75,10 @@ export default function App() {
             <>
               <Drawer.Screen name="HomeAdmin" component={HomeScreenAdmin} />
               <Drawer.Screen name="Loans" component={Loans} />
+              <Drawer.Screen name="Loan Approval" component={LoanApprovalDetail} />
               <Drawer.Screen name="Jobs" component={AdminJobs} />
+              <Drawer.Screen name="Events" component={AdminEvents} />
+
             </>
           ) : (
             <>
@@ -84,7 +94,12 @@ export default function App() {
           )}
         </Drawer.Navigator>
       ) : (
-        <Login onLoginSuccess={handleLoginSuccess} onAdminLogin={handleAdminLogin} />
+        <Stack.Navigator>
+          <Stack.Screen name="Login">
+            {(props) => <Login {...props} onLoginSuccess={handleLoginSuccess} onAdminLogin={handleAdminLogin} />}
+          </Stack.Screen>
+          <Stack.Screen name="SignUp" component={SignUp} />
+        </Stack.Navigator>
       )}
       <StatusBar style="auto" />
     </NavigationContainer>
