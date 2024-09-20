@@ -64,26 +64,39 @@ export default function App() {
     setIsAdmin(true); // Set user as admin after admin login
   };
 
+  const handleLogout = () => {
+    console.log('Logging out...');
+    setIsAuthenticated(false);
+    setIsAdmin(false); // Reset the admin status on logout
+  };
+
   return (
     <NavigationContainer>
       {isAuthenticated ? (
         <Drawer.Navigator
           initialRouteName={isAdmin ? 'HomeAdmin' : 'Home'}
-          drawerContent={(props) => <CustomDrawerContent {...props} />}
+          drawerContent={(props) => (
+            <CustomDrawerContent {...props} onLogout={handleLogout} />
+          )}
         >
           {isAdmin ? (
             <>
-              <Drawer.Screen name="HomeAdmin" component={HomeScreenAdmin} />
+              <Drawer.Screen name="HomeAdmin">
+                {(props) => <HomeScreenAdmin {...props} handleLogout={handleLogout} />}
+              </Drawer.Screen>
               <Drawer.Screen name="Loans" component={Loans} />
               <Drawer.Screen name="Loan Approval" component={LoanApprovalDetail} />
               <Drawer.Screen name="Jobs" component={AdminJobs} />
               <Drawer.Screen name="Events" component={AdminEvents} />
-
             </>
           ) : (
             <>
+              
+
               <Drawer.Screen name="Home" component={HomeScreen} />
-              <Drawer.Screen name="Profile" component={ProfileScreen} />
+              <Drawer.Screen name="Profile">
+              {(props) => <ProfileScreen {...props} handleLogout={handleLogout} />}
+              </Drawer.Screen>
               <Drawer.Screen name="Events" component={EventAttendance} />
               <Drawer.Screen name="Jobs" component={JobList} />
               <Drawer.Screen name="Loan Request" component={LoanRequest} />
@@ -95,8 +108,14 @@ export default function App() {
         </Drawer.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name="Login">
-            {(props) => <Login {...props} onLoginSuccess={handleLoginSuccess} onAdminLogin={handleAdminLogin} />}
+          <Stack.Screen name="Login" options={{ headerShown: false }}>
+            {(props) => (
+              <Login
+                {...props}
+                onLoginSuccess={handleLoginSuccess}
+                onAdminLogin={handleAdminLogin}
+              />
+            )}
           </Stack.Screen>
           <Stack.Screen name="SignUp" component={SignUp} />
         </Stack.Navigator>

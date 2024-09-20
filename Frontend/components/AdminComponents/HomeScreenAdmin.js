@@ -1,11 +1,17 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
-export default function HomeScreenAdmin() {
+export default function HomeScreenAdmin({ handleLogout }) {
+  const navigation = useNavigation();
+
+  const handleLogoutPress = () => {
+    handleLogout(); // Calls the actual logout function passed from props
+  };
+
   return (
     <View style={styles.container}>
-     
       {/* User Count Section */}
       <View style={styles.userCountSection}>
         <View style={styles.circle}>
@@ -23,7 +29,7 @@ export default function HomeScreenAdmin() {
             <Text style={styles.buttonText}>Create Job</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.logoutButton}>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogoutPress}>
             <Icon name="logout" color="white" size={20} />
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
@@ -48,17 +54,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f8f8f8',
-  },
-  headerText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginLeft: 10,
-  },
   userCountSection: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -67,7 +62,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   circle: {
-    padding:50,
+    padding: 50,
     borderRadius: 30,
     backgroundColor: '#d4f5d6',
     justifyContent: 'center',
@@ -75,12 +70,12 @@ const styles = StyleSheet.create({
   },
   userCountText: {
     fontSize: 24,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   userText: {
     fontSize: 16,
     color: '#888',
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   buttonsContainer: {
     justifyContent: 'center',
@@ -97,7 +92,7 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: 5,
     fontSize: 13,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   logoutButton: {
     flexDirection: 'row',
@@ -112,7 +107,7 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 10,
     fontSize: 16,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   upcomingEventsSection: {
     alignItems: 'center',
@@ -120,7 +115,7 @@ const styles = StyleSheet.create({
   },
   upcomingEventsText: {
     fontSize: 30,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   noEventsImage: {
     width: 150,
@@ -130,6 +125,6 @@ const styles = StyleSheet.create({
   noEventsText: {
     fontSize: 16,
     color: '#888',
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
 });

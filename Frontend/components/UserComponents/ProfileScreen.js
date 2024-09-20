@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Image, Text, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ handleLogout }) => {
+  const handleLogoutPress = () => {
+    handleLogout(); // Calls the actual logout function passed from props
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
@@ -37,7 +41,7 @@ const ProfileScreen = () => {
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogoutPress}>
         <Text style={styles.logoutButtonText}>Log Out</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -96,14 +100,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     color: '#333',
-    fontFamily:'Poppins-Bold',
-    top:5,
-    
+    fontFamily: 'Poppins-Bold',
+    top: 5,
   },
   value: {
     fontSize: 18,
     color: '#333',
-    top:5,
+    top: 5,
   },
   line: {
     height: 1,
@@ -121,8 +124,7 @@ const styles = StyleSheet.create({
   logoutButtonText: {
     fontSize: 15,
     color: '#fff',
-    
-    fontFamily:"Poppins-Bold"
+    fontFamily: 'Poppins-Bold',
   },
 });
 
