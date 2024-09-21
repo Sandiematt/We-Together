@@ -10,13 +10,16 @@ MongoClient.connect(MONGODB_URI)
     console.log('Connected to MongoDB');
     const db = client.db('wetogether');
     const usersCollection = db.collection('user');
+    const jobsCollection = db.collection('job'); // Job collection
 
     app.use(express.json());
 
+    // Health check endpoint
     app.get('/', (req, res) => {
       return res.status(200).send("Server Running");
     });
 
+    // Login endpoint
     app.post('/login', async (req, res) => {
       try {
         const { username, password } = req.body;
@@ -62,6 +65,39 @@ MongoClient.connect(MONGODB_URI)
         res.status(201).json({ message: 'User registered successfully', userId: result.insertedId });
       } catch (error) {
         console.error('Error during registration:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Fetch jobs endpoint
+    app.get('/jobs', async (req, res) => {
+      try {
+        const jobs = await jobsCollection.find().toArray();
+        res.status(200).json(jobs);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Create job endpoint
+    app.post('/jobs', async (req, res) => {
+      try {
+        const { title, location, type, level, salary } = req.body; // Updated attributes
+        console.log({ title, location, type, level, salary });
+
+        // Insert new job into the database
+        const result = await jobsCollection.insertOne({
+          title, // Updated attribute name
+          location, // Updated attribute name
+          type, // Updated attribute name
+          level, // Updated attribute name
+          salary, // Updated attribute name
+        });
+
+        res.status(201).json({ message: 'Job created successfully', jobId: result.insertedId });
+      } catch (error) {
+        console.error('Error creating job:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
     });

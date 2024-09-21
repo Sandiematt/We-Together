@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,25 +7,6 @@ import CreateJob from './CreateJob';
 import JobAdminDetail from './JobAdminDetail';
 
 const Stack = createStackNavigator();
-
-const jobData = [
-  {
-    id: '1',
-    title: 'Senior UI / UX Designer',
-    location: 'West Beach California',
-    salary: '$3000 - $4000 / month',
-    type: 'Full Time',
-    level: 'Senior',
-  },
-  {
-    id: '2',
-    title: 'Product Designer',
-    location: 'South Jakarta, Indonesia',
-    salary: '$650 - $760 / month',
-    type: 'Full Time',
-    level: 'Senior',
-  },
-];
 
 const JobItem = ({ item, navigation }) => (
   <View style={styles.jobCard}>
@@ -55,14 +36,43 @@ const JobItem = ({ item, navigation }) => (
 
 const JobList = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const filteredJobs = jobData.filter(job =>
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch('https://745a-103-16-69-59.ngrok-free.app/jobs'); // Replace with your API URL
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setJobs(data); // Assuming the data is an array of job objects
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  const filteredJobs = jobs.filter(job =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  if (loading) {
+    return <Text>Loading...</Text>; // You can replace this with a loading spinner if you prefer
+  }
+
+  if (error) {
+    return <Text>Error: {error}</Text>;
+  }
+
   return (
     <View style={styles.container}>
-      
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchBar}
@@ -111,26 +121,11 @@ const AdminJobs = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     padding: 16,
     backgroundColor: '#F5F5F5',
     flex: 1,
-  },
-  headerContainer: {
-    marginBottom: 25,
-    marginLeft: 20,
-  },
-  findYour: {
-    fontSize: 20,
-    color: '#333',
-    fontFamily: 'Poppins-Normal',
-  },
-  perfectJob: {
-    fontSize: 28,
-    color: '#333',
-    fontFamily: 'Poppins-Bold',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -180,7 +175,7 @@ const styles = StyleSheet.create({
   jobInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8, // Corrected marginBottom to a number
+    marginBottom: 8,
   },
   jobLocation: {
     fontSize: 13,
@@ -197,13 +192,13 @@ const styles = StyleSheet.create({
   },
   jobTags: {
     flexDirection: 'row',
-    marginBottom: 10, // Corrected marginBottom to a number
+    marginBottom: 10,
   },
   jobTag: {
     fontSize: 12,
     color: '#FFF',
     backgroundColor: '#385396',
-    borderRadius: 4, // Corrected borderRadius to a number
+    borderRadius: 4,
     paddingVertical: 4,
     paddingHorizontal: 8,
     marginRight: 8,
@@ -212,44 +207,43 @@ const styles = StyleSheet.create({
   requirementsButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 80, // Corrected marginTop to a number
+    marginTop: 80,
   },
   ApplyText: {
     fontSize: 16,
     color: '#e81a07',
-    marginRight: 3, // Corrected marginRight to a number
-     // Corrected marginTop to a number
+    marginRight: 3,
     fontFamily: 'Poppins-LightBold',
   },
   detailContainer: {
     flex: 1,
-    padding: 16, // Corrected padding to a number
+    padding: 16,
     backgroundColor: '#FFF',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 8, // Corrected marginBottom to a number
+    marginBottom: 8,
   },
   location: {
     fontSize: 18,
     color: '#666',
-    marginBottom: 8, // Corrected marginBottom to a number
+    marginBottom: 8,
   },
   salary: {
     fontSize: 18,
     color: '#666',
-    marginBottom: 8, // Corrected marginBottom to a number
+    marginBottom: 8,
   },
   type: {
     fontSize: 18,
     color: '#666',
-    marginBottom: 8, // Corrected marginBottom to a number
+    marginBottom: 8,
   },
   level: {
     fontSize: 18,
     color: '#666',
-    marginBottom: 8, // Corrected marginBottom to a number
+    marginBottom: 8,
   },
   createJobButton: {
     position: 'absolute',
@@ -266,13 +260,8 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     marginRight: 7,
-    marginTop:2,
-    fontFamily:'Poppins-Bold',
-    },
-  createJobContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 2,
+    fontFamily: 'Poppins-Bold',
   },
 });
 
