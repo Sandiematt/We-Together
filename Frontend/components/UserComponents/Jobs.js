@@ -1,30 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import JobDetail from './JobsDetail';
 
 const Stack = createStackNavigator();
-
-const jobData = [
-  {
-    id: '1',
-    title: 'Senior UI / UX Designer',
-    location: 'West Beach California',
-    salary: '$3000 - $4000 / month',
-    type: 'Full Time',
-    level: 'Senior',
-  },
-  {
-    id: '2',
-    title: 'Product Designer',
-    location: 'South Jakarta, Indonesia',
-    salary: '$650 - $760 / month',
-    type: 'Full Time',
-    level: 'Senior',
-  }
-];
 
 const JobItem = ({ item, navigation }) => (
   <View style={styles.jobCard}>
@@ -55,10 +36,29 @@ const JobItem = ({ item, navigation }) => (
 
 const JobList = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredJobs = jobData.filter(job =>
+  useEffect(() => {
+    fetch('https://7b8b-103-16-69-59.ngrok-free.app/jobs') // Replace with your server URL if needed
+      .then((response) => response.json())
+      .then((data) => {
+        setJobs(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching jobs:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  const filteredJobs = jobs.filter((job) =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <View style={styles.container}>
@@ -77,33 +77,23 @@ const JobList = ({ navigation }) => {
       </View>
       <FlatList
         data={filteredJobs}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id} // MongoDB generates _id field
         renderItem={({ item }) => <JobItem item={item} navigation={navigation} />}
       />
     </View>
   );
 };
 
-const jobDetails = ({ route }) => {
-  const { job } = route.params;
-
-  return (
-    <View style={styles.detailContainer}>
-      <Text style={styles.title}>{job.title}</Text>
-      <Text style={styles.location}>{job.location}</Text>
-      <Text style={styles.salary}>{job.salary}</Text>
-      <Text style={styles.type}>{job.type}</Text>
-      <Text style={styles.level}>{job.level}</Text>
-    </View>
-  );
-};
-
 const JobApp = () => {
   return (
-    <NavigationContainer independent={true} >
+    <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen name="JobList" component={JobList} options={{ headerShown: false }} />
-      
+        <Stack.Screen 
+          name="JobDetail" 
+          component={JobDetail} 
+          options={({ route }) => ({ title: '' })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -122,13 +112,13 @@ const styles = StyleSheet.create({
   findYour: {
     fontSize: 20,
     color: '#333',
-    fontFamily:'Poppins-Normal',
+    fontFamily: 'Poppins-Normal',
     marginRight: 60,
   },
   perfectJob: {
     fontSize: 28,
     color: '#333',
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -172,7 +162,7 @@ const styles = StyleSheet.create({
   },
   jobTitle: {
     fontSize: 19,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
     color: '#333',
   },
   jobInfo: {
@@ -184,14 +174,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#666',
     marginLeft: 8,
-    marginTop:5,
-    fontFamily:'Poppins-Normal',
+    marginTop: 5,
+    fontFamily: 'Poppins-Normal',
   },
   jobSalary: {
     fontSize: 13,
     color: '#333',
     marginLeft: 8,
-    fontFamily:'Poppins-Normal',
+    fontFamily: 'Poppins-Normal',
   },
   jobTags: {
     flexDirection: 'row',
@@ -205,49 +195,19 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     marginRight: 8,
-    fontFamily:'Poppins-Normal',
+    fontFamily: 'Poppins-Normal',
   },
   requirementsButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:80,
+    marginTop: 80,
   },
   ApplyText: {
     fontSize: 16,
     color: '#e81a07',
     marginRight: 3,
-    marginTop:2,
-    fontFamily:'Poppins-LightBold',
-  },
-  detailContainer: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#FFF',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  location: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 8,
-  },
-  salary: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 8,
-  },
-  type: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 8,
-  },
-  level: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 8,
+    marginTop: 2,
+    fontFamily: 'Poppins-LightBold',
   },
 });
 

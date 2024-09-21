@@ -91,8 +91,6 @@ export default function App() {
             </>
           ) : (
             <>
-              
-
               <Drawer.Screen name="Home" component={HomeScreen} />
               <Drawer.Screen name="Profile">
               {(props) => <ProfileScreen {...props} handleLogout={handleLogout} />}

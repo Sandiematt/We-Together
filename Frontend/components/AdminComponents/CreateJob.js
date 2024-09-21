@@ -1,23 +1,36 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import axios from 'axios';
 
 export default function CreateJob() {
-  const [jobTitle, setJobTitle] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [jobDescription, setJobDescription] = useState('');
-  const [skillsRequired, setSkillsRequired] = useState('');
-  const [salaryRange, setSalaryRange] = useState('');
+  const [title, setTitle] = useState(''); // Changed to title
+  const [location, setLocation] = useState('');
+  const [type, setType] = useState(''); // Added type
+  const [level, setLevel] = useState(''); // Added level
+  const [salary, setSalary] = useState(''); // Changed to salary
 
-  const handleSubmit = () => { 
-    // Add your submit logic here
-    console.log('Job form submitted');
-    console.log({
-      jobTitle,
-      companyName,
-      jobDescription,
-      skillsRequired,
-      salaryRange,
-    });
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('https://7b8b-103-16-69-59.ngrok-free.app/jobs', {
+        title, // Updated attribute name
+        location,
+        type, // Updated attribute name
+        level, // Updated attribute name
+        salary, // Updated attribute name
+      });
+      console.log('Job form submitted', response.data);
+      resetForm();
+    } catch (error) {
+      console.error('Error submitting job form', error);
+    }
+  };
+
+  const resetForm = () => {
+    setTitle('');
+    setLocation('');
+    setType('');
+    setLevel('');
+    setSalary('');
   };
 
   return (
@@ -25,34 +38,32 @@ export default function CreateJob() {
       <Text style={styles.label}>Job Title:</Text>
       <TextInput
         style={styles.input}
-        value={jobTitle}
-        onChangeText={setJobTitle}
+        value={title}
+        onChangeText={setTitle}
       />
-      <Text style={styles.label}>Company Name:</Text>
+      <Text style={styles.label}>Location:</Text>
       <TextInput
         style={styles.input}
-        value={companyName}
-        onChangeText={setCompanyName}
+        value={location}
+        onChangeText={setLocation}
       />
-      <Text style={styles.label}>Job Description:</Text>
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        value={jobDescription}
-        onChangeText={setJobDescription}
-        multiline={true}
-        numberOfLines={5}
-      />
-      <Text style={styles.label}>Skills Required:</Text>
+      <Text style={styles.label}>Type:</Text>
       <TextInput
         style={styles.input}
-        value={skillsRequired}
-        onChangeText={setSkillsRequired}
+        value={type} // Updated to use type
+        onChangeText={setType}
+      />
+      <Text style={styles.label}>Level:</Text>
+      <TextInput
+        style={styles.input}
+        value={level} // Updated to use level
+        onChangeText={setLevel}
       />
       <Text style={styles.label}>Salary Range:</Text>
       <TextInput
         style={styles.input}
-        value={salaryRange}
-        onChangeText={setSalaryRange}
+        value={salary} // Updated to use salary
+        onChangeText={setSalary}
         keyboardType="numeric"
       />
       <View style={styles.buttonContainer}>
@@ -84,10 +95,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingLeft: 8,
     backgroundColor: '#F6F6F6',
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top', // Ensure the text starts at the top of the TextInput
   },
   buttonContainer: {
     marginTop: 20,
