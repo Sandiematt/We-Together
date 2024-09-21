@@ -10,6 +10,7 @@ MongoClient.connect(MONGODB_URI)
     console.log('Connected to MongoDB');
     const db = client.db('wetogether');
     const usersCollection = db.collection('user');
+    const eventsCollection = db.collection('event');
     const jobsCollection = db.collection('job'); // Job collection
 
     app.use(express.json());
@@ -69,6 +70,44 @@ MongoClient.connect(MONGODB_URI)
       }
     });
 
+    // Fetch events endpoint
+    app.get('/events', async (req, res) => {
+      console.log('Fetching events...');
+      try {
+        const events = await eventsCollection.find({}).toArray();
+        res.status(200).json(events);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Create event endpoint
+    app.post('/events', async (req, res) => {
+      try {
+        const { title, description, venue, place, date, time } = req.body;
+
+        // Ensure required fields are present
+        if (!title || !description || !venue || !place || !date || !time) {
+          return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        const result = await eventsCollection.insertOne({
+          title,
+          description,
+          venue,
+          place,
+          date,
+          time,
+        });
+
+        res.status(201).json({ message: 'Event added successfully', eventId: result.insertedId });
+      } catch (error) {
+        console.error('Error adding event:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
     // Fetch jobs endpoint
     app.get('/jobs', async (req, res) => {
       try {
@@ -83,16 +122,16 @@ MongoClient.connect(MONGODB_URI)
     // Create job endpoint
     app.post('/jobs', async (req, res) => {
       try {
-        const { title, location, type, level, salary } = req.body; // Updated attributes
+        const { title, location, type, level, salary } = req.body;
         console.log({ title, location, type, level, salary });
 
         // Insert new job into the database
         const result = await jobsCollection.insertOne({
-          title, // Updated attribute name
-          location, // Updated attribute name
-          type, // Updated attribute name
-          level, // Updated attribute name
-          salary, // Updated attribute name
+          title,
+          location,
+          type,
+          level,
+          salary,
         });
 
         res.status(201).json({ message: 'Job created successfully', jobId: result.insertedId });
