@@ -1,29 +1,55 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const events = [
-  { title: 'Pottery Workshop', content: 'Learn the art of pottery.', venue: 'Art Center', date: '2024-07-20'},
-  { title: 'Yoga Retreat', content: 'Relax and rejuvenate.', venue: 'Wellness Spa', date: '2024-07-25' },
-  { title: 'Cooking Class', content: 'Master the art of Italian cuisine.', venue: 'Cooking Studio', date: '2024-07-28' },
-];
-
 export default function EventAttendance() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch events from the backend
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('https://4194-103-16-69-59.ngrok-free.app/events'); 
+        const data = await response.json();
+        setEvents(data); // Adjust if data structure differs
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       {events.map((event, index) => (
-        <View style={styles.card} key={index}>
+        <View style={styles.card} key={event._id}>
           <Image
             style={styles.cardImage}
-            source={{ uri: `https://picsum.photos/700?random=${index}` }}
+            source={{ uri: event.image ? event.image : `https://picsum.photos/700?random=${index}` }}
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
-            <Text style={styles.contentText}>{event.content}</Text>
+            <Text style={styles.contentText}>{event.description}</Text>
             <View style={styles.detailsContainer}>
               <View>
-                <Text style={styles.contentDetails}><Icon name="map-marker" size={14} color="#999" />  Venue: {event.venue}</Text>
-                <Text style={styles.contentDetails}><Icon name="calendar" size={14} color="#999" /> Date: {event.date}</Text>
+                <Text style={styles.contentDetails}>
+                  <Icon name="map-marker" size={14} color="#999" /> Venue: {event.venue}, {event.place}
+                </Text>
+                <Text style={styles.contentDetails}>
+                  <Icon name="calendar" size={14} color="#999" /> Date: {new Date(event.date).toLocaleDateString()} at {event.time}
+                </Text>
               </View>
               <TouchableOpacity style={styles.button} onPress={() => { /* Add your event handling logic here */ }}>
                 <Text style={styles.buttonText}>Attend</Text>
@@ -38,54 +64,60 @@ export default function EventAttendance() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    padding: 10,
     backgroundColor: '#f5f5f5',
   },
   card: {
+    backgroundColor: '#fff',
     borderRadius: 10,
-    elevation: 4,
-    backgroundColor: 'white',
-    margin: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    marginVertical: 10,
     overflow: 'hidden',
+  },
+  cardImage: {
+    width: '100%',
+    height: 180,
+    backgroundColor: '#ccc',
   },
   cardContent: {
     padding: 15,
   },
   contentTitle: {
-    fontSize: 24,
-    fontFamily: 'Poppins-Bold',
+    fontSize: 18,
+    fontWeight: 'bold',
     color: '#333',
   },
   contentText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#666',
-    fontFamily: 'Poppins-Normal',
-    marginVertical: 0,
+    marginVertical: 10,
   },
   detailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
   },
   contentDetails: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#999',
-    marginVertical: 2,
-  },
-  cardImage: {
-    width: '100%',
-    height: 200,
   },
   button: {
     backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 25,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
   },
   buttonText: {
-    fontSize: 15,
-    color: 'white',
-    fontFamily: 'Poppins-Bold',
-    alignItems: 'center'
+    color: '#fff',
+    fontSize: 14,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,23 +1,52 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, ScrollView } from 'react-native';
 
 const AddEventForm = ({ navigation }) => {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [description, setDescription] = useState('');
   const [venue, setVenue] = useState('');
+  const [place, setPlace] = useState('');
   const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
 
-  const handleSubmit = () => {
-    if (title === '' || content === '' || venue === '' || date === '') {
+  const handleSubmit = async () => {
+    if (title === '' || description === '' || venue === '' || place === '' || date === '' || time === '') {
       Alert.alert('Error', 'All fields are required.');
     } else {
-      Alert.alert('Success', 'Event added successfully!');
-      navigation.goBack();
+      try {
+        const eventData = {
+          title,
+          description,
+          venue,
+          place,
+          date,
+          time,
+        };
+
+        const response = await fetch('https://4194-103-16-69-59.ngrok-free.app/events', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(eventData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add event');
+        }
+
+        const result = await response.json();
+        Alert.alert('Success', 'Event added successfully!');
+        navigation.goBack();
+      } catch (error) {
+        console.error('Error adding event:', error);
+        Alert.alert('Error', 'Could not add event. Please try again.');
+      }
     }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.heading}>Event Details</Text>
 
       <Text style={styles.label}>Event Title</Text>
@@ -28,14 +57,14 @@ const AddEventForm = ({ navigation }) => {
         onChangeText={setTitle}
       />
 
-      <Text style={styles.label}>Event Content</Text>
+      <Text style={styles.label}>Event Description</Text>
       <TextInput
         style={styles.textArea}
-        placeholder="Enter event content"
-        value={content}
-        onChangeText={setContent}
+        placeholder="Enter event description"
+        value={description}
+        onChangeText={setDescription}
         multiline={true}
-        numberOfLines={4} 
+        numberOfLines={4}
       />
 
       <Text style={styles.label}>Event Venue</Text>
@@ -46,7 +75,15 @@ const AddEventForm = ({ navigation }) => {
         onChangeText={setVenue}
       />
 
-      <Text style={styles.label}>Event Date </Text>
+      <Text style={styles.label}>Event Place</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Kerala"
+        value={place}
+        onChangeText={setPlace}
+      />
+
+      <Text style={styles.label}>Event Date</Text>
       <TextInput
         style={styles.input}
         placeholder="(YYYY-MM-DD)"
@@ -54,10 +91,18 @@ const AddEventForm = ({ navigation }) => {
         onChangeText={setDate}
       />
 
+      <Text style={styles.label}>Event Time</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="HH:MM"
+        value={time}
+        onChangeText={setTime}
+      />
+
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
+        <Text style={styles.buttonText}>Submit Event</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -94,8 +139,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     fontSize: 16,
-    height: 100,  // You can adjust the height of the text area
-    textAlignVertical: 'top',  // Ensures the text starts at the top
+    height: 100, // You can adjust the height of the text area
+    textAlignVertical: 'top', // Ensures the text starts at the top
     backgroundColor: '#f9f9f9',
   },
   button: {
@@ -103,6 +148,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 20,
   },
   buttonText: {
     color: '#fff',

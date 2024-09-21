@@ -1,35 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import EventAdminDetail from './EventAdminDetail.js'; 
 import AddEventForm from './AddEventForm.js'; 
 
 const Stack = createStackNavigator();
 
-const events = [
-  { 
-    title: 'Pottery Workshop', 
-    content: 'Learn the art of pottery.', 
-    venue: 'Art Center', 
-    date: '2024-07-20' 
-  },
-  { 
-    title: 'Yoga Retreat', 
-    content: 'Relax and rejuvenate.', 
-    venue: 'Wellness Spa', 
-    date: '2024-07-25' 
-  },
-  { 
-    title: 'Cooking Class', 
-    content: 'Master the art of Italian cuisine.', 
-    venue: 'Cooking Studio', 
-    date: '2024-07-28' 
-  },
-];
-
 const EventsScreen = ({ navigation }) => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('https://4194-103-16-69-59.ngrok-free.app/events'); 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setEvents(data); // Adjust if data structure differs
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        Alert.alert('Error', 'Failed to load events.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddEventForm')}>
@@ -45,7 +51,7 @@ const EventsScreen = ({ navigation }) => {
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
-            <Text style={styles.contentText}>{event.content}</Text>
+            <Text style={styles.contentText}>{event.description}</Text>
             <View style={styles.detailsContainer}>
               <View>
                 <Text style={styles.contentDetails}><Ionicons name="location" size={14} color="#999" /> Venue: {event.venue}</Text>
@@ -53,7 +59,7 @@ const EventsScreen = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('EventAdminDetail')}
+                onPress={() => navigation.navigate('EventAdminDetail', { eventId: event._id })} // Pass event ID to detail screen
               >
                 <Text style={styles.buttonText}>View Details</Text>
               </TouchableOpacity>
