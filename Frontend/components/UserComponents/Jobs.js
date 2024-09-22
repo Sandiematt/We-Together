@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput ,ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -40,7 +40,7 @@ const JobList = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://7b8b-103-16-69-59.ngrok-free.app/jobs') // Replace with your server URL if needed
+    fetch('https://boss-turkey-happily.ngrok-free.app/jobs') // Replace with your server URL if needed
       .then((response) => response.json())
       .then((data) => {
         setJobs(data);
@@ -57,7 +57,11 @@ const JobList = ({ navigation }) => {
   );
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    );
   }
 
   return (
@@ -208,6 +212,11 @@ const styles = StyleSheet.create({
     marginRight: 3,
     marginTop: 2,
     fontFamily: 'Poppins-LightBold',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

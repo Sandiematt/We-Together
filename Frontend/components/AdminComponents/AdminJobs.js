@@ -43,7 +43,7 @@ const JobList = ({ navigation }) => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch('https://745a-103-16-69-59.ngrok-free.app/jobs'); // Replace with your API URL
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs'); // Replace with your API URL
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

@@ -11,7 +11,7 @@ export default function CreateJob() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('https://7b8b-103-16-69-59.ngrok-free.app/jobs', {
+      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/jobs', {
         title, // Updated attribute name
         location,
         type, // Updated attribute name

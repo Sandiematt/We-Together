@@ -10,7 +10,7 @@ export default function EventAttendance() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://4194-103-16-69-59.ngrok-free.app/events'); 
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events'); 
         const data = await response.json();
         setEvents(data); // Adjust if data structure differs
         setLoading(false);

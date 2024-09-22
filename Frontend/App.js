@@ -32,6 +32,8 @@ export default function App() {
     'Poppins-Bold': require('./fonts/Poppins-Bold.ttf'),
     'Poppins-Regular': require('./fonts/Poppins-Regular.ttf'),
     'Poppins-SemiBold': require('./fonts/Poppins-SemiBold.ttf'),
+    'Poppins-Normal': require('./fonts/Poppins-Regular.ttf'),
+    'Poppins-LightBold':require('./fonts/Poppins-SemiBold.ttf')
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);

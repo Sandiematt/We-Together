@@ -15,7 +15,7 @@ const EventsScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://4194-103-16-69-59.ngrok-free.app/events'); 
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

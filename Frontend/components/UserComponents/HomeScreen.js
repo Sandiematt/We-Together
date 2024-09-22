@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     marginVertical: 10,
-    
     fontFamily:'Poppins-Normal'
   },
   searchContainer: {

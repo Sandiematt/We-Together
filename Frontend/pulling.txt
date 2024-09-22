@@ -6,3 +6,6 @@ git push -u orgin master
 
 FOR PULLING..
 git pull 
+
+For starting server
+ngrok tunnel --label edge=edghts_2mPcYsZKla9IaEG04t5Vr1gvRb8 http://localhost:5000
