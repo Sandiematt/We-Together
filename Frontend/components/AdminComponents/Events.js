@@ -59,7 +59,7 @@ const EventsScreen = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('EventAdminDetail', { eventId: event._id })} // Pass event ID to detail screen
+                onPress={() => navigation.navigate('EventAdminDetail', { eventTitle: event.title })} 
               >
                 <Text style={styles.buttonText}>View Details</Text>
               </TouchableOpacity>
@@ -83,7 +83,7 @@ const AdminEvents = () => {
         <Stack.Screen
           name="EventAdminDetail"
           component={EventAdminDetail}
-          options={{ headerTitle: '' }}
+          options={({ route }) => ({ title: route.params.eventTitle })} 
         />
         <Stack.Screen
           name="AddEventForm"

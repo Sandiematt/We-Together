@@ -1,32 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 
-const EventAdminDetail = () => {
-  // Example participants data for events
-  const initialParticipants = [
-    { id: 1, name: 'Anjitha', email: 'anjitha@example.com', status: 'Present' },
-    { id: 2, name: 'Hai', email: 'hai@example.com', status: 'Absent' },
-    { id: 3, name: 'Eldho', email: 'eldho@example.com', status: 'Present' }
-  ];
+const EventAdminDetail = ({ route }) => {
+  const { eventTitle } = route.params; // Get event title from navigation parameters
+  const [participants, setParticipants] = useState([]);
 
-  const [participants, setParticipants] = useState(initialParticipants);
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      try {
+        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/attendees?eventTitle=${encodeURIComponent(eventTitle)}`); // Replace with your backend URL
+        
+        // Check if the response is OK (status code 200-299)
+        if (!response.ok) {
+          throw new Error(`Server Error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setParticipants(data);
+      } catch (error) {
+        console.error('Error fetching participants:', error);
+        // Log the entire response for debugging
+        const text = await response.text();
+        console.error('Response text:', text);
+      }
+    };
+    
+    fetchParticipants();
+  }, [eventTitle]);
+  
 
-  // Function to toggle status between 'Present' and 'Absent'
-  const toggleStatus = (id) => {
-    setParticipants(participants.map(p =>
-      p.id === id ? { ...p, status: p.status === 'Present' ? 'Absent' : 'Present' } : p
-    ));
-  };
+  // Function to toggle status between 'Present' and 'Absent' using participant's name
+  const toggleStatus = async (name, newStatus) => {
+    setParticipants((prevParticipants) =>
+      prevParticipants.map((participant) =>
+        participant.name === name
+          ? { ...participant, status: newStatus } // Update status locally
+          : participant
+      )
+    );
 
-  const handleSubmit = () => {
-    Alert.alert('Attendance Submitted', 'The attendance has been successfully saved.');
+    // Update the backend
+    try {
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/updateAttendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, status: newStatus }), // Send name instead of _id
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        Alert.alert('Error', errorData.message || 'Failed to update attendance status.');
+      } else {
+        Alert.alert('Success', 'Attendance status updated successfully.');
+      }
+    } catch (error) {
+      console.error('Error updating attendance status:', error);
+      Alert.alert('Error', 'Failed to update attendance status.');
+    }
   };
 
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Event Participants</Text>
+        <Text style={styles.headerText}>{eventTitle} Participants</Text>
       </View>
 
       {/* Total Participants and Status Overview */}
@@ -48,25 +87,30 @@ const EventAdminDetail = () => {
       {/* Participants List */}
       <View>
         {participants.map((participant) => (
-          <View key={participant.id} style={styles.participantItem}>
+          <View key={participant.name} style={styles.participantItem}>
             <View style={styles.participantDetails}>
               <Text style={styles.participantName}>{participant.name}</Text>
               <Text style={styles.participantEmail}>{participant.email}</Text>
             </View>
-            <TouchableOpacity 
-              style={[styles.statusBox, participant.status === 'Present' ? styles.presentBox : styles.absentBox]} 
-              onPress={() => toggleStatus(participant.id)}
+
+            {/* Button for Present */}
+            <TouchableOpacity
+              style={[styles.toggleButton, styles.presentButton, participant.status === 'Present' ? styles.selectedButton : null]}
+              onPress={() => toggleStatus(participant.name, 'Present')}
             >
-              <Text style={styles.participantStatus}>{participant.status}</Text>
+              <Text style={styles.toggleButtonText}>Present</Text>
+            </TouchableOpacity>
+
+            {/* Button for Absent */}
+            <TouchableOpacity
+              style={[styles.toggleButton, styles.absentButton, participant.status === 'Absent' ? styles.selectedButton : null]}
+              onPress={() => toggleStatus(participant.name, 'Absent')}
+            >
+              <Text style={styles.toggleButtonText}>Absent</Text>
             </TouchableOpacity>
           </View>
         ))}
       </View>
-
-      {/* Submit Button */}
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit Attendance</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -74,13 +118,13 @@ const EventAdminDetail = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    padding: 2
+    padding: 2,
   },
- header:{
+  header: {
     backgroundColor: '#fff',
-    alignItems:'center',
-    padding:15
- },
+    alignItems: 'center',
+    padding: 15,
+  },
   headerText: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -88,7 +132,7 @@ const styles = StyleSheet.create({
   overview: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 20
+    padding: 20,
   },
   circle: {
     width: 100,
@@ -98,11 +142,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    elevation: 3, // For Android shadow
-    shadowColor: '#000', // iOS shadow
+    elevation: 3,
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 }
+    shadowOffset: { width: 0, height: 2 },
   },
   circleText: {
     fontSize: 24,
@@ -123,17 +167,17 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 }
+    shadowOffset: { width: 0, height: 2 },
   },
   cardTitle: {
     fontSize: 16,
-    color: '#333'
+    color: '#333',
   },
   participantsCount: {
     fontSize: 24,
     color: 'green',
     fontWeight: 'bold',
-    marginTop: 10
+    marginTop: 10,
   },
   participantItem: {
     flexDirection: 'row',
@@ -146,50 +190,36 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 }
+    shadowOffset: { width: 0, height: 2 },
   },
   participantDetails: {
-    flex: 1
+    flex: 1,
   },
   participantName: {
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   participantEmail: {
     color: '#666',
     fontSize: 14,
-    marginTop: 5
+    marginTop: 5,
   },
-  participantStatus: {
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: 'bold'
-  },
-  statusBox: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+  toggleButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 20,
     marginLeft: 10,
   },
-  presentBox: {
-    backgroundColor: 'green'
+  presentButton: {
+    backgroundColor: 'green',
   },
-  absentBox: {
-    backgroundColor: 'red'
+  absentButton: {
+    backgroundColor: 'red',
   },
-  submitButton: {
-    backgroundColor: '#4CAF50',
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 20,
-    alignItems: 'center',
-    elevation: 2,
-  },
-  submitButtonText: {
+  toggleButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });
 
 export default EventAdminDetail;

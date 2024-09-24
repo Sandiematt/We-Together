@@ -1,27 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, TextInput, Modal, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function EventAttendance() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [name, setName] = useState('');
+  const [email, setemail] = useState(''); // Using email as email
+  const [error, setError] = useState('');
 
   // Fetch events from the backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events'); 
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events');
         const data = await response.json();
-        setEvents(data); // Adjust if data structure differs
-        setLoading(false);
+        setEvents(data);
       } catch (error) {
         console.error('Error fetching events:', error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchEvents();
   }, []);
+
+//submit attend
+  const handleSubmit = async () => {
+  if (!name || !email) {
+    setError('Please fill in all details.');
+    return;
+  }
+
+  try {
+    const response = await fetch('https://boss-turkey-happily.ngrok-free.app/attend', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        eventTitle: selectedEvent.title, // Use the event title instead of ID
+      }),
+    });
+
+    const data = await response.json();
+
+    // Check for the response status and/or the exact message
+    if (response.status === 201 && data.message === "User registered successfully for event") {
+      setModalVisible(false);
+      setName('');
+      setemail('');
+      setError('');
+    } else {
+      setError('Failed to register.');
+    }
+  } catch (err) {
+    console.error('Post error:', err);
+    setError('Post failed. Please try again.');
+  }
+};
+
+  
+  
 
   if (loading) {
     return (
@@ -37,7 +82,7 @@ export default function EventAttendance() {
         <View style={styles.card} key={event._id}>
           <Image
             style={styles.cardImage}
-            source={{ uri: event.image ? event.image : `https://picsum.photos/700?random=${index}` }}
+            source={{ uri: event.image || `https://picsum.photos/700?random=${index}` }}
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
@@ -51,13 +96,51 @@ export default function EventAttendance() {
                   <Icon name="calendar" size={14} color="#999" /> Date: {new Date(event.date).toLocaleDateString()} at {event.time}
                 </Text>
               </View>
-              <TouchableOpacity style={styles.button} onPress={() => { /* Add your event handling logic here */ }}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setSelectedEvent(event);
+                  setModalVisible(true);
+                }}
+              >
                 <Text style={styles.buttonText}>Attend</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       ))}
+
+      {/* Modal for attendance */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Enter Your Details</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={name}
+              onChangeText={setName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setemail}
+              keyboardType="email-address"
+            />
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+            <View style={styles.modalButtons}>
+              <Button title="Submit" onPress={handleSubmit} />
+              <Button title="Cancel" color="red" onPress={() => setModalVisible(false)} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -119,5 +202,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
