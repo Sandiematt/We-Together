@@ -5,20 +5,23 @@ const app = express();
 const PORT = 5000;
 const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mongodb.net/';
 
-MongoClient.connect(MONGODB_URI)
-  .then(client => {
+(async () => {
+  try {
+    const client = await MongoClient.connect(MONGODB_URI);
     console.log('Connected to MongoDB');
     const db = client.db('wetogether');
     const usersCollection = db.collection('user');
     const eventsCollection = db.collection('event');
     const jobsCollection = db.collection('job');
     const jobApplicantsCollection = db.collection('jobapplicants'); // Job applicants collection
+    const attendanceCollection = db.collection('eventattendance'); // Attendance collection
 
+    // Middleware to parse JSON requests
     app.use(express.json());
 
     // Health check endpoint
     app.get('/', (req, res) => {
-      return res.status(200).send("Server Running");
+      return res.status(200).send('Server Running');
     });
 
     // Login endpoint
@@ -58,7 +61,7 @@ MongoClient.connect(MONGODB_URI)
           contact,
           gender,
           password,
-          isadmin: false
+          isadmin: false,
         });
 
         res.status(201).json({ message: 'User registered successfully', userId: result.insertedId });
@@ -67,7 +70,8 @@ MongoClient.connect(MONGODB_URI)
         res.status(500).json({ error: 'Internal server error' });
       }
     });
-    
+
+    // Fetch user count
     app.get('/userCount', async (req, res) => {
       try {
         const count = await usersCollection.countDocuments();
@@ -111,6 +115,80 @@ MongoClient.connect(MONGODB_URI)
       } catch (error) {
         console.error('Error adding event:', error);
         res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Endpoint to handle event attendance
+    app.post('/attend', async (req, res) => {
+      try {
+        const { name, email, eventTitle } = req.body;
+
+        // Check if all required fields are provided
+        if (!name || !email || !eventTitle) {
+          return res.status(400).json({ error: 'Please provide all required fields' });
+        }
+
+        // Check if the event exists using the title
+        const event = await eventsCollection.findOne({ title: eventTitle });
+        if (!event) {
+          return res.status(404).json({ error: 'Event not found' });
+        }
+
+        // Register attendance
+        const newAttendance = {
+          name,
+          email,
+          eventTitle,
+        };
+
+        await attendanceCollection.insertOne(newAttendance);
+        res.status(201).json({ message: 'User registered successfully for event' });
+      } catch (error) {
+        console.error('Error registering attendance:', error);
+        res.status(500).json({ error: 'Failed to register for event' });
+      }
+    });
+
+    // Fetch attendees with optional event title filter
+    app.get('/attendees', async (req, res) => {
+      try {
+        const { eventTitle } = req.query; // Get eventTitle from query parameters
+        const query = eventTitle ? { eventTitle } : {}; // Create query based on eventTitle
+
+        const attendees = await attendanceCollection.find(query).toArray();
+        
+        res.status(200).json(attendees);
+      } catch (error) {
+        console.error('Error fetching attendees:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Update attendance status endpoint
+    app.post('/updateAttendance', async (req, res) => {
+      const { name, status } = req.body;
+
+      try {
+        // Validate inputs
+        if (!name || !status) {
+          return res.status(400).json({ message: 'Name and status are required.' });
+        }
+
+        // Update attendance in the collection
+        const result = await attendanceCollection.findOneAndUpdate(
+          { name: name },
+          { $set: { status: status } },
+          { returnDocument: false } // Return the updated document
+        );
+
+        if (!result.value) {
+          return res.status(404).json({ message: 'Attendance record not found.' });
+        }
+
+        res.json({ message: 'Attendance status updated successfully.', participant: result.value });
+      } catch (error) {
+        console.error('Error updating attendance:', error);
+        res.status(500).json({ message: 'Failed to update attendance status.' });
       }
     });
 
@@ -175,7 +253,10 @@ MongoClient.connect(MONGODB_URI)
     // Fetch job applicants endpoint
     app.get('/api/jobapplicants', async (req, res) => {
       try {
-        const applicants = await jobApplicantsCollection.find({}).toArray();
+        const { jobtitle } = req.query;
+        const query = jobtitle ? { jobtitle } : {}; 
+    
+        const applicants = await jobApplicantsCollection.find(query).toArray();
         res.status(200).json(applicants);
       } catch (error) {
         console.error('Error fetching applicants:', error);
@@ -186,7 +267,7 @@ MongoClient.connect(MONGODB_URI)
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
-  })
-  .catch(err => {
-    console.error('Error connecting to MongoDB:', err);
-  });
+  } catch (err) {
+    console.error('Failed to connect to MongoDB:', err);
+  }
+})();

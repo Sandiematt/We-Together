@@ -52,8 +52,8 @@ const ProfileScreen = ({ handleLogout }) => {
           </View>
           <View style={styles.line} />
           <View style={styles.cardItem}>
-            <Text style={styles.label}>Address:</Text>
-            <Text style={styles.value}>123 Main St, City, Country</Text>
+            <Text style={styles.label}>Gender:</Text>
+            <Text style={styles.value}>Male</Text>
           </View>
         </View>
       </View>

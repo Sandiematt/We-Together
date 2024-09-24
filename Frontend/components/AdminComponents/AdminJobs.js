@@ -41,6 +41,7 @@ const JobList = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  
 
   const fetchJobs = async () => {
     try {
@@ -129,8 +130,12 @@ const AdminJobs = () => {
     <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen name="JobList" component={JobList} options={{ headerShown: false }} />
-        <Stack.Screen name="JobDetail" component={JobAdminDetail} options={{ title: '' }} />
-        <Stack.Screen name="CreateJob" component={CreateJob} options={{ title: '' }} />
+        <Stack.Screen 
+          name="JobDetail" 
+          component={JobAdminDetail} 
+          options={({ route }) => ({ title: route.params.job.title })} // Set title dynamically
+        />
+        <Stack.Screen name="CreateJob" component={CreateJob} options={{ title: 'Create Job' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

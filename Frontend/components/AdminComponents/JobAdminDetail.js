@@ -1,30 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-const JobAdminDetail = () => {
+
+const JobAdminDetail = ({ route }) => {
+  const { job } = route.params; // Get job details from route params
+  const selectedJobTitle = job.title; // Extract the job title
+
   const [applicants, setApplicants] = useState([]);
   const [totalJobOpenings, setTotalJobOpenings] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch applicants
-        const applicantsResponse = await fetch('https://boss-turkey-happily.ngrok-free.app/api/jobapplicants');
+        // Fetch applicants by job title
+        const applicantsResponse = await fetch(`https://boss-turkey-happily.ngrok-free.app/api/jobapplicants?jobtitle=${encodeURIComponent(selectedJobTitle)}`);
+        if (!applicantsResponse.ok) {
+          throw new Error('Network response was not ok');
+        }
+        
         const applicantsData = await applicantsResponse.json();
         setApplicants(applicantsData);
 
         // Fetch job openings
-        const jobsResponse = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs'); // Adjust the endpoint as necessary
+        const jobsResponse = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs');
         const jobsData = await jobsResponse.json();
-        setTotalJobOpenings(jobsData.length); // Assuming jobsData is an array of job objects
+        setTotalJobOpenings(jobsData.length);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
-
+  }, [selectedJobTitle]);// Add selectedJobTitle as a dependency
+  
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -43,19 +56,23 @@ const JobAdminDetail = () => {
       </View>
 
       <View>
-        {applicants.map((applicant, index) => (
-          <View key={applicant._id.$oid} style={styles.applicantItem}>
-            <Text style={styles.applicantIndex}>{index + 1}.</Text>
-            <View style={styles.applicantDetails}>
-              <Text style={styles.applicantName}>{applicant.name}</Text>
-              <Text style={styles.jobTitle}>{applicant.jobtitle || 'N/A'}</Text>
-              <Text style={styles.applicationDate}>{applicant.applicationdate || 'N/A'}</Text>
-              <Text style={styles.applicantEmail}>Email: {applicant.email}</Text>
-              <Text style={styles.applicantAddress}>Address: {applicant.address}</Text>
-              <Text style={styles.applicantAadhaar}>Aadhaar No: {applicant.aadhaar}</Text>
+        {Array.isArray(applicants) && applicants.length > 0 ? (
+          applicants.map((applicant, index) => (
+            <View key={applicant._id} style={styles.applicantItem}>
+              <Text style={styles.applicantIndex}>{index + 1}.</Text>
+              <View style={styles.applicantDetails}>
+                <Text style={styles.applicantName}>{applicant.name}</Text>
+                <Text style={styles.jobTitle}>{applicant.jobtitle || 'N/A'}</Text>
+                <Text style={styles.applicationDate}>{applicant.applicationdate || 'N/A'}</Text>
+                <Text style={styles.applicantEmail}>Email: {applicant.email}</Text>
+                <Text style={styles.applicantAddress}>Address: {applicant.address}</Text>
+                <Text style={styles.applicantAadhaar}>Aadhaar No: {applicant.aadhaar}</Text>
+              </View>
             </View>
-          </View>
-        ))}
+          ))
+        ) : (
+          <Text>No applicants available.</Text>
+        )}
       </View>
     </ScrollView>
   );
