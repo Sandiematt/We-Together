@@ -1,13 +1,51 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
 export default function HomeScreenAdmin({ handleLogout }) {
   const navigation = useNavigation();
+  const [userCount, setUserCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      try {
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/userCount'); // Update with your API endpoint
+        const data = await response.json();
+        setUserCount(data.count);
+      } catch (error) {
+        console.error("Failed to fetch user count:", error);
+      }
+    };
+
+    fetchUserCount();
+  }, []);
 
   const handleLogoutPress = () => {
-    handleLogout(); // Calls the actual logout function passed from props
+    Alert.alert(
+      "Logout Confirmation",
+      "Do you want to logout?",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Logout cancelled"),
+          style: "cancel"
+        },
+        {
+          text: "Yes",
+          onPress: () => handleLogout(),
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const handleCreateJobPress = () => {
+    navigation.navigate('Jobs');
+  };
+
+  const handleEventPress = () => {
+    navigation.navigate('Events');
   };
 
   return (
@@ -15,16 +53,16 @@ export default function HomeScreenAdmin({ handleLogout }) {
       {/* User Count Section */}
       <View style={styles.userCountSection}>
         <View style={styles.circle}>
-          <Text style={styles.userCountText}>26</Text>
+          <Text style={styles.userCountText}>{userCount}</Text>
           <Text style={styles.userText}>Users</Text>
         </View>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={handleEventPress}>
             <Icon name="event" color="black" size={20} />
             <Text style={styles.buttonText}>Create Event</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={handleCreateJobPress}>
             <Icon name="add" color="black" size={20} />
             <Text style={styles.buttonText}>Create Job</Text>
           </TouchableOpacity>

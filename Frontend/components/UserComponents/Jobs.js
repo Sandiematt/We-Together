@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput ,ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ActivityIndicator, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import JobDetail from './JobsDetail';
+import JobDetail from './JobsDetail'; // Make sure the path is correct
 
 const Stack = createStackNavigator();
 
+// JobItem component to display individual jobs
 const JobItem = ({ item, navigation }) => (
   <View style={styles.jobCard}>
     <View style={styles.jobDetails}>
@@ -26,7 +27,7 @@ const JobItem = ({ item, navigation }) => (
     </View>
     <TouchableOpacity 
       style={styles.requirementsButton}
-      onPress={() => navigation.navigate('JobDetail', { job: item })}
+      onPress={() => navigation.navigate('JobDetail', { jobTitle: item.title })} // Use item.title
     >
       <Text style={styles.ApplyText}>Apply Now</Text>
       <Icon name="chevron-forward" size={23} color="#e81a07" />
@@ -34,29 +35,46 @@ const JobItem = ({ item, navigation }) => (
   </View>
 );
 
+// JobList component to display the list of jobs
 const JobList = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
+  // Fetch jobs from the server
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs'); // Replace with your server URL
+      const data = await response.json();
+      setJobs(data);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  // Fetch jobs on component mount
   useEffect(() => {
-    fetch('https://boss-turkey-happily.ngrok-free.app/jobs') // Replace with your server URL if needed
-      .then((response) => response.json())
-      .then((data) => {
-        setJobs(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching jobs:', error);
-        setLoading(false);
-      });
+    fetchJobs();
   }, []);
 
+  // Refresh jobs list
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchJobs(); // Trigger a refresh by fetching jobs again
+  };
+
+  // Filter jobs based on search query
   const filteredJobs = jobs.filter((job) =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (loading) {
+  // Display loader when data is being fetched
+  if (loading && !refreshing) {
     return (
       <View style={styles.loader}>
         <ActivityIndicator size="large" color="#007BFF" />
@@ -83,26 +101,37 @@ const JobList = ({ navigation }) => {
         data={filteredJobs}
         keyExtractor={(item) => item._id} // MongoDB generates _id field
         renderItem={({ item }) => <JobItem item={item} navigation={navigation} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );
 };
 
+// Main JobApp component with navigation stack
 const JobApp = () => {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator>
-        <Stack.Screen name="JobList" component={JobList} options={{ headerShown: false }} />
+        <Stack.Screen 
+          name="JobList" 
+          component={JobList} 
+          options={{ headerShown: false }} // Hides the header for JobList
+        />
         <Stack.Screen 
           name="JobDetail" 
           component={JobDetail} 
-          options={({ route }) => ({ title: '' })}
+          options={({ route }) => ({
+            title: route.params?.jobTitle || 'Job Detail', // Dynamically sets the title
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     padding: 16,

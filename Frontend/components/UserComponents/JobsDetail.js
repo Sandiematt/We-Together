@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 
 export default function JobDetail({ route }) {
   const [name, setName] = useState('');
@@ -8,10 +8,46 @@ export default function JobDetail({ route }) {
   const [address, setAddress] = useState('');
   const [aadhaar, setAadhaar] = useState('');
 
-  const handleSubmit = () => {
-    // Add your submit logic here
-    console.log('Form submitted with:', { name, email, phone, address, aadhaar });
+  const handleSubmit = async () => {
+    try {
+      const applicationData = {
+        name,
+        email,
+        phone,
+        address,
+        aadhaar,
+        jobtitle: route.params.jobTitle, // Ensure this is set correctly
+        applicationdate: new Date().toISOString().split('T')[0],
+      };
+  
+      console.log('Application Data:', applicationData); // Log the data
+  
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/api/jobapplicants', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(applicationData),
+      });
+  
+      const text = await response.text();
+      console.log('Raw response:', text);
+  
+      if (response.ok) {
+        const jsonResponse = JSON.parse(text);
+        Alert.alert('Success', 'Application submitted successfully!');
+        console.log(jsonResponse);
+      } else {
+        const errorResponse = JSON.parse(text);
+        Alert.alert('Error', errorResponse.error || 'Failed to submit application.');
+        console.error('Error response:', errorResponse);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+      console.error('Fetch error:', error);
+    }
   };
+  
 
   return (
     <ScrollView style={styles.container}>

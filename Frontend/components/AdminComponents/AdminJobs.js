@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, RefreshControl ,ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -27,7 +27,8 @@ const JobItem = ({ item, navigation }) => (
     </View>
     <TouchableOpacity
       style={styles.requirementsButton}
-      onPress={() => navigation.navigate('JobDetail', { job: item })}>
+      onPress={() => navigation.navigate('JobDetail', { job: item })}
+    >
       <Text style={styles.ApplyText}>View Details</Text>
       <Icon name="chevron-forward" size={23} color="#e81a07" />
     </TouchableOpacity>
@@ -39,32 +40,43 @@ const JobList = ({ navigation }) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchJobs = async () => {
+    try {
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs'); // Replace with your API URL
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setJobs(data); // Assuming the data is an array of job objects
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs'); // Replace with your API URL
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setJobs(data); // Assuming the data is an array of job objects
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchJobs();
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchJobs(); // Trigger a refresh by fetching jobs again
+  };
 
   const filteredJobs = jobs.filter(job =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (loading) {
-    return <Text>Loading...</Text>; // You can replace this with a loading spinner if you prefer
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    );
   }
 
   if (error) {
@@ -86,6 +98,9 @@ const JobList = ({ navigation }) => {
         data={filteredJobs}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <JobItem item={item} navigation={navigation} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
       <TouchableOpacity style={styles.createJobButton} onPress={() => navigation.navigate('CreateJob')}>
         <Text style={styles.createJobText}>Create Job</Text>

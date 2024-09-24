@@ -1,9 +1,25 @@
 import React from 'react';
 import { View, StyleSheet, Image, Text, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
+import { Alert } from 'react-native';
 
 const ProfileScreen = ({ handleLogout }) => {
   const handleLogoutPress = () => {
-    handleLogout(); // Calls the actual logout function passed from props
+    Alert.alert(
+      "Logout Confirmation",
+      "Do you want to logout?",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Logout cancelled"),
+          style: "cancel"
+        },
+        {
+          text: "Yes",
+          onPress: () => handleLogout(), // Calls the logout function if confirmed
+        }
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
