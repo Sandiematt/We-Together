@@ -18,11 +18,7 @@ const EventAdminDetail = () => {
     ));
   };
 
-  // Function to handle the submit button press
   const handleSubmit = () => {
-    // Here you can handle the submit action, such as sending the data to a server.
-    // For now, we will just show an alert with the updated participant statuses.
-    // Example: console.log(participants); // Or send to server
     Alert.alert('Attendance Submitted', 'The attendance has been successfully saved.');
   };
 
