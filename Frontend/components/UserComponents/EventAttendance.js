@@ -2,6 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, TextInput, Modal, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// Import local images
+const localImages = {
+  event1: require('../../assets/event1.jpg'),
+  event2: require('../../assets/event2.jpg'),
+  event3: require('../../assets/event3.jpg'),
+  event4: require('../../assets/event4.jpg'),
+  event5: require('../../assets/event5.jpg'),
+};
+
 export default function EventAttendance() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,6 +18,7 @@ export default function EventAttendance() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
 
   // Fetch events from the backend
@@ -27,6 +37,11 @@ export default function EventAttendance() {
 
     fetchEvents();
   }, []);
+
+  // Filter events based on search term
+  const filteredEvents = events.filter((event) =>
+    event.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Submit attendance
   const handleSubmit = async () => {
@@ -74,11 +89,22 @@ export default function EventAttendance() {
 
   return (
     <ScrollView style={styles.container}>
-      {events.map((event) => (
+      {/* Header with background image or color and title */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Explore New Events !!</Text>
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search events..."
+          value={searchTerm}
+          onChangeText={setSearchTerm}
+        />
+      </View>
+
+      {filteredEvents.map((event, index) => (
         <View style={styles.card} key={event._id}>
           <Image
             style={styles.cardImage}
-            source={{ uri: `https://picsum.photos/400/200?random=${event._id}` }} 
+            source={localImages[`event${index + 1}`]}  // Use local images based on index
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
@@ -90,8 +116,8 @@ export default function EventAttendance() {
                   {` ${event.venue}, ${event.place}`}
                 </Text>
                 <Text style={styles.contentDetails}>
-                  <Icon name="calendar" size={20} color="#4682B4" /> {/* Bigger colored date icon */}
-                  {` ${new Date(event.date).toLocaleDateString()} at ${event.time}`}
+                  <Icon name="calendar" size={20} color="#4682B4" />
+                  {` ${new Date(event.date).toLocaleDateString('en-GB')} at ${event.time}`}
                 </Text>
               </View>
               <TouchableOpacity
@@ -146,8 +172,35 @@ export default function EventAttendance() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
     backgroundColor: '#f5f5f5',
+  },
+  header: {
+    padding: 30,
+    backgroundColor: '#5A67D8',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'left',
+    marginBottom: 10,
+  },
+  searchBar: {
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    fontSize: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   card: {
     backgroundColor: '#fff',
@@ -162,6 +215,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     overflow: 'hidden',
+    padding:15,
   },
   cardImage: {
     width: '100%',
@@ -241,7 +295,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    textAlign: 'center',
     marginBottom: 10,
+    textAlign: 'center',
   },
 });
