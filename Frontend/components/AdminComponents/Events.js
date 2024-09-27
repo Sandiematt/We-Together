@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import EventAdminDetail from './EventAdminDetail.js'; 
 import AddEventForm from './AddEventForm.js'; 
@@ -11,33 +11,57 @@ const Stack = createStackNavigator();
 const EventsScreen = ({ navigation }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // State for refreshing
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/events'); 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setEvents(data); // Adjust if data structure differs
-      } catch (error) {
-        console.error('Error fetching events:', error);
-        Alert.alert('Error', 'Failed to load events.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchEvents();
   }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events'); 
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setEvents(data); // Adjust if data structure differs
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      Alert.alert('Error', 'Failed to load events.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false); // Stop refreshing
+    }
+  };
+
+  // Function to handle refresh
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchEvents();
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
+  // Function to format the date
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#4caf50']} // Optional: Color for the loading indicator
+        />
+      }
+    >
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddEventForm')}>
         <Ionicons name="add" size={24} color="#fff" />
         <Text style={styles.addButtonText}>Add Event</Text>
@@ -55,7 +79,7 @@ const EventsScreen = ({ navigation }) => {
             <View style={styles.detailsContainer}>
               <View>
                 <Text style={styles.contentDetails}><Ionicons name="location" size={14} color="#999" /> Venue: {event.venue}</Text>
-                <Text style={styles.contentDetails}><Ionicons name="calendar" size={14} color="#999" /> Date: {event.date}</Text>
+                <Text style={styles.contentDetails}><Ionicons name="calendar" size={14} color="#999" /> Date: {formatDate(event.date)}</Text>
               </View>
               <TouchableOpacity
                 style={styles.button}
@@ -100,7 +124,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingTop: 36,
     paddingBottom: 18,
-    paddingHorizontal: 18,
+    paddingHorizontal: 10,
     backgroundColor: '#f7f7f7',
   },
   addButton: {
@@ -166,6 +190,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 25,
+    alignSelf: 'flex-start', // Align button to the start
   },
   buttonText: {
     fontSize: 15,

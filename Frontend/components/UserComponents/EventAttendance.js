@@ -25,7 +25,7 @@ export default function EventAttendance() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/events');
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events');
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -51,7 +51,7 @@ export default function EventAttendance() {
     }
 
     try {
-      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/attend', {
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/attend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,6 +97,7 @@ export default function EventAttendance() {
           placeholder="Search events..."
           value={searchTerm}
           onChangeText={setSearchTerm}
+          placeholderTextColor="#999" // Optional: Set color for placeholder text
         />
       </View>
 
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
     color: '#fff',
     textAlign: 'left',
     marginBottom: 10,
@@ -201,6 +202,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
+    // Add the fontFamily for the search input
+    fontFamily: 'Poppins-Regular', // Use a regular font instead of bold for the search bar
   },
   card: {
     backgroundColor: '#fff',
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     overflow: 'hidden',
-    padding:15,
+    padding: 15,
   },
   cardImage: {
     width: '100%',
@@ -227,7 +230,7 @@ const styles = StyleSheet.create({
   },
   contentTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
     color: '#333',
     marginBottom: 5,
   },
@@ -249,7 +252,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center align icons with text
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#5A67D8',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
@@ -258,6 +261,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+    fontFamily: 'Poppins-Bold',
   },
   loader: {
     flex: 1,
@@ -279,7 +283,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
     marginBottom: 15,
     textAlign: 'center',
   },

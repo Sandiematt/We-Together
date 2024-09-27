@@ -15,7 +15,7 @@ const Forum = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/posts');
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/posts');
       if (!response.ok) throw new Error(`Error fetching posts: ${response.status}`);
       const data = await response.json();
       setPosts(data);
@@ -68,7 +68,7 @@ const Forum = () => {
       };
 
       try {
-        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/posts', {
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/posts', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const Forum = () => {
   const handleLike = async (postId) => {
     try {
       // Send like request to the server
-      const response = await fetch(`https://raccoon-summary-bluejay.ngrok-free.app/posts/${postId}/like`, {
+      const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/posts/${postId}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

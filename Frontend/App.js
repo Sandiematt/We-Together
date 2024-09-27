@@ -99,8 +99,13 @@ export default function App() {
           ) : (
             <>
               <Drawer.Screen name="Home" component={HomeScreen} />
-              <Drawer.Screen name="Profile">
-              {(props) => <ProfileScreen {...props} handleLogout={handleLogout} />}
+              <Drawer.Screen name="Profile" options={{
+                  headerShown: true, 
+                  headerStyle: { backgroundColor: '#024578' }, 
+                  headerTintColor: '#fff', 
+                  headerTitleAlign:'left',
+                }} >
+              {(props) => <ProfileScreen {...props} handleLogout={handleLogout}  />}
               </Drawer.Screen>
               <Drawer.Screen name="Events" component={EventAttendance} />
               <Drawer.Screen name="Jobs" component={JobList} />

@@ -50,7 +50,6 @@ const EventAdminDetail = ({ route }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        Alert.alert('Error', errorData.message || 'Failed to update attendance status.');
       } else {
         Alert.alert('Success', 'Attendance status updated successfully.');
       }

@@ -23,7 +23,7 @@ const AddEventForm = ({ navigation }) => {
           time,
         };
 
-        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/events', {
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
