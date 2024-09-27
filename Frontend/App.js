@@ -80,6 +80,11 @@ export default function App() {
           drawerContent={(props) => (
             <CustomDrawerContent {...props} onLogout={handleLogout} />
           )}
+          screenOptions={{
+            headerShown: true, 
+            headerStyle: { backgroundColor: '#5A67D8' }, 
+            headerTintColor: '#fff', 
+          }}
         >
           {isAdmin ? (
             <>

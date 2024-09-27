@@ -1,60 +1,62 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import axios from 'axios';
 
 export default function AddLoanForm() {
-  const [loanAmount, setLoanAmount] = useState('');
-  const [loanTerm, setLoanTerm] = useState('');
-  const [interestRate, setInterestRate] = useState('');
-  const [monthlyIncome, setMonthlyIncome] = useState('');
-  const [employmentStatus, setEmploymentStatus] = useState('');
+  const [title, setTitle] = useState(''); // Updated variable name to title
+  const [description, setDescription] = useState('');
+  const [interest, setInterest] = useState(''); // Updated variable name to interest
+  const [amount, setAmount] = useState('');
 
-  const handleSubmit = () => {
-    // Add your submit logic here
-    console.log('Loan form submitted');
-    console.log({
-      loanAmount,
-      loanTerm,
-      interestRate,
-      monthlyIncome,
-      employmentStatus,
-    });
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/loanapplicants', {
+        title,            // Use title instead of loanName
+        description,
+        interest: `${interest}%`, // Append % sign to interest
+        amount: Number(amount), // Convert amount to a number
+      });
+      Alert.alert('Success', response.data.message);
+      // Clear the form fields
+      setTitle('');         // Reset title
+      setDescription('');   // Reset description
+      setInterest('');      // Reset interest
+      setAmount('');        // Reset amount
+    } catch (error) {
+      console.error('Error submitting loan:', error);
+      Alert.alert('Error', 'Failed to submit loan. Please try again.');
+    }
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.label}>Loan Amount:</Text>
+      <Text style={styles.label}>Loan Title:</Text>
       <TextInput
         style={styles.input}
-        value={loanAmount}
-        onChangeText={setLoanAmount}
-        keyboardType="numeric"
+        value={title}        // Update to use title
+        onChangeText={setTitle} // Update to use setTitle
       />
-      <Text style={styles.label}>Loan Term (years):</Text>
+      <Text style={styles.label}>Description:</Text>
       <TextInput
-        style={styles.input}
-        value={loanTerm}
-        onChangeText={setLoanTerm}
-        keyboardType="numeric"
+        style={[styles.input, styles.descriptionInput]}
+        value={description}
+        onChangeText={setDescription}
+        multiline={true}
+        numberOfLines={4}
       />
       <Text style={styles.label}>Interest Rate (%):</Text>
       <TextInput
         style={styles.input}
-        value={interestRate}
-        onChangeText={setInterestRate}
+        value={interest}     // Update to use interest
+        onChangeText={setInterest}
         keyboardType="numeric"
       />
-      <Text style={styles.label}>Monthly Income:</Text>
+      <Text style={styles.label}>Amount:</Text>
       <TextInput
         style={styles.input}
-        value={monthlyIncome}
-        onChangeText={setMonthlyIncome}
+        value={amount}
+        onChangeText={setAmount}
         keyboardType="numeric"
-      />
-      <Text style={styles.label}>Employment Status:</Text>
-      <TextInput
-        style={styles.input}
-        value={employmentStatus}
-        onChangeText={setEmploymentStatus}
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -85,6 +87,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingLeft: 8,
     backgroundColor: '#F6F6F6',
+  },
+  descriptionInput: {
+    height: 100,
+    textAlignVertical: 'top',
   },
   buttonContainer: {
     marginTop: 20,

@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 const PORT = 5000;
@@ -13,8 +13,10 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
     const usersCollection = db.collection('user');
     const eventsCollection = db.collection('event');
     const jobsCollection = db.collection('job');
-    const jobApplicantsCollection = db.collection('jobapplicants'); // Job applicants collection
-    const attendanceCollection = db.collection('eventattendance'); // Attendance collection
+    const jobApplicantsCollection = db.collection('jobapplicants');
+    const attendanceCollection = db.collection('eventattendance');
+    const loansCollection = db.collection('loan');
+    const postsCollection = db.collection('forum');
 
     // Middleware to parse JSON requests
     app.use(express.json());
@@ -123,18 +125,15 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
       try {
         const { name, email, eventTitle } = req.body;
 
-        // Check if all required fields are provided
         if (!name || !email || !eventTitle) {
           return res.status(400).json({ error: 'Please provide all required fields' });
         }
 
-        // Check if the event exists using the title
         const event = await eventsCollection.findOne({ title: eventTitle });
         if (!event) {
           return res.status(404).json({ error: 'Event not found' });
         }
 
-        // Register attendance
         const newAttendance = {
           name,
           email,
@@ -152,11 +151,10 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
     // Fetch attendees with optional event title filter
     app.get('/attendees', async (req, res) => {
       try {
-        const { eventTitle } = req.query; // Get eventTitle from query parameters
-        const query = eventTitle ? { eventTitle } : {}; // Create query based on eventTitle
+        const { eventTitle } = req.query;
+        const query = eventTitle ? { eventTitle } : {};
 
         const attendees = await attendanceCollection.find(query).toArray();
-        
         res.status(200).json(attendees);
       } catch (error) {
         console.error('Error fetching attendees:', error);
@@ -169,16 +167,14 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
       const { name, status } = req.body;
 
       try {
-        // Validate inputs
         if (!name || !status) {
           return res.status(400).json({ message: 'Name and status are required.' });
         }
 
-        // Update attendance in the collection
         const result = await attendanceCollection.findOneAndUpdate(
           { name: name },
           { $set: { status: status } },
-          { returnDocument: false } // Return the updated document
+          { returnDocument: false }
         );
 
         if (!result.value) {
@@ -228,7 +224,6 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
       try {
         const { name, email, phone, address, aadhaar, jobtitle, applicationdate } = req.body;
 
-        // Validate required fields
         if (!name || !email || !phone || !address || !aadhaar || !jobtitle || !applicationdate) {
           return res.status(400).json({ error: 'All fields are required' });
         }
@@ -254,8 +249,8 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
     app.get('/api/jobapplicants', async (req, res) => {
       try {
         const { jobtitle } = req.query;
-        const query = jobtitle ? { jobtitle } : {}; 
-    
+        const query = jobtitle ? { jobtitle } : {};
+
         const applicants = await jobApplicantsCollection.find(query).toArray();
         res.status(200).json(applicants);
       } catch (error) {
@@ -264,10 +259,95 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
       }
     });
 
+    // Fetch loans endpoint
+    app.get('/loans', async (req, res) => {
+      try {
+        const loans = await loansCollection.find({}).toArray();
+        res.status(200).json(loans);
+      } catch (error) {
+        console.error('Error fetching loans:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Create loan applicant endpoint
+    app.post('/loanapplicants', async (req, res) => {
+      try {
+        const { name, email, loanamount, loantype, loandate, status } = req.body;
+
+        const result = await loansCollection.insertOne({
+          name,
+          email,
+          loanamount,
+          loantype,
+          loandate,
+          status,
+        });
+
+        res.status(201).json({ message: 'Loan applicant created successfully', loanId: result.insertedId });
+      } catch (error) {
+        console.error('Error creating loan applicant:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Forum posts endpoint
+    app.get('/posts', async (req, res) => {
+      try {
+        const posts = await postsCollection.find({}).toArray();
+        res.status(200).json(posts);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Create forum post endpoint
+    app.post('/posts', async (req, res) => {
+      try {
+        const { author, title, content } = req.body;
+
+        const result = await postsCollection.insertOne({
+          author,
+          title,
+          content,
+          likes: 0,
+        });
+
+        res.status(201).json({ message: 'Post created successfully', postId: result.insertedId });
+      } catch (error) {
+        console.error('Error creating post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Update post likes endpoint
+    app.post('/posts/:postId/like', async (req, res) => {
+      try {
+        const { postId } = req.params;
+
+        const result = await postsCollection.findOneAndUpdate(
+          { _id: new ObjectId(postId) },
+          { $inc: { likes: 1 } },
+          { returnOriginal: false }
+        );
+
+        if (!result.value) {
+          return res.status(404).json({ error: 'Post not found' });
+        }
+
+        res.status(200).json({ message: 'Post liked successfully', post: result.value });
+      } catch (error) {
+        console.error('Error liking post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Start the server
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
-  } catch (err) {
-    console.error('Failed to connect to MongoDB:', err);
+  } catch (error) {
+    console.error('Failed to connect to MongoDB', error);
   }
 })();

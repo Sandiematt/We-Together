@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Ensure you have this package installed for icons
 import LoanAdminDetail from './LoanAdminDetail.js';
 import AddLoanForm from './AddLoanForum.js';
@@ -9,23 +9,51 @@ import AddLoanForm from './AddLoanForum.js';
 const Stack = createStackNavigator();
 
 const LoansScreen = ({ navigation }) => {
-  const loans = [
-    {
-      title: "Policy Loan",
-      subtitle: "Lowest interest as low as 0.18%",
-      amount: "$20,000",
-      interest: "0.18%",
-    },
-    {
-      title: "Personal Loan",
-      subtitle: "Flexible repayment options",
-      amount: "$15,000",
-      interest: "0.45%",
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false); // State to manage refreshing
+
+  const fetchLoans = async () => {
+    try {
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/loans'); // Update with your server address
+      if (!response.ok) {
+        throw new Error('Failed to fetch loans');
+      }
+      const data = await response.json();
+      setLoans(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+      setRefreshing(false); // Stop refreshing when fetch is done
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true); // Start refreshing
+    fetchLoans(); // Fetch loans again
+  };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return <Text style={styles.errorText}>{error}</Text>;
+  }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('Loanforum')}>
         <Ionicons name="add" size={24} color="#fff" />
         <Text style={styles.addButtonText}>Add Loan</Text>
@@ -35,7 +63,7 @@ const LoansScreen = ({ navigation }) => {
         <View key={index} style={styles.card}>
           <View style={styles.infoContainer}>
             <Text style={styles.title}>{loan.title}</Text>
-            <Text style={styles.subtitle}>{loan.subtitle}</Text>
+            <Text style={styles.description}>{loan.description}</Text> 
             <View style={styles.detailsContainer}>
               <View style={styles.details}>
                 <View style={styles.detailItem}>
@@ -94,7 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
   },
   addButton: {
-    
     alignItems: 'center',
     marginBottom: 18,
     padding: 12,
@@ -131,9 +158,10 @@ const styles = StyleSheet.create({
     marginBottom: 4.5,
     fontFamily: 'Poppins-Bold',
   },
-  subtitle: {
-    fontSize: 14.4,
+  description: { // New styles for description
+    fontSize: 14,
     color: '#666',
+    marginBottom: 8,
     fontFamily: 'Poppins-Normal',
   },
   detailsContainer: {
@@ -176,6 +204,11 @@ const styles = StyleSheet.create({
     fontSize: 14.4,
     fontFamily: 'Poppins-Bold',
     marginTop: 5,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

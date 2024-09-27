@@ -68,7 +68,7 @@ const SignUp = ({ navigation }) => {
                     autoCapitalize='none'
                     autoCorrect={false}
                     style={styles.inputText}
-                    placeholder="Username"
+                    placeholder="john_doe"
                     placeholderTextColor="#003f5c"
                     onChangeText={(text) => setUsername(text)}
                   />
@@ -79,7 +79,7 @@ const SignUp = ({ navigation }) => {
                     autoCapitalize='words'
                     autoCorrect={false}
                     style={styles.inputText}
-                    placeholder="Name"
+                    placeholder="John Doe"
                     placeholderTextColor="#003f5c"
                     onChangeText={(text) => setName(text)}
                   />
@@ -91,7 +91,7 @@ const SignUp = ({ navigation }) => {
                     autoCorrect={false}
                     keyboardType='email-address'
                     style={styles.inputText}
-                    placeholder="Email"
+                    placeholder="john.doe@example.com"
                     placeholderTextColor="#003f5c"
                     onChangeText={(text) => setEmail(text)}
                   />
@@ -101,7 +101,7 @@ const SignUp = ({ navigation }) => {
                   <TextInput
                     keyboardType='phone-pad'
                     style={styles.inputText}
-                    placeholder="Contact Number"
+                    placeholder="+1234567890"
                     placeholderTextColor="#003f5c"
                     onChangeText={(text) => setContact(text)}
                   />
@@ -125,7 +125,7 @@ const SignUp = ({ navigation }) => {
                   <TextInput
                     secureTextEntry
                     style={styles.inputText}
-                    placeholder="Password"
+                    placeholder="Enter password"
                     placeholderTextColor="#003f5c"
                     onChangeText={(text) => setPassword(text)}
                   />
@@ -135,7 +135,7 @@ const SignUp = ({ navigation }) => {
                   <TextInput
                     secureTextEntry
                     style={styles.inputText}
-                    placeholder="Confirm Password"
+                    placeholder="Confirm password"
                     placeholderTextColor="#003f5c"
                     onChangeText={(text) => setConfirmPassword(text)}
                   />
@@ -164,7 +164,7 @@ const SignUp = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ebecf4',
+    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   inputText: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ebecf4',
     height: 44,
     paddingHorizontal: 16,
     borderRadius: 12,
