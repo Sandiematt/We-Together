@@ -1,34 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import LoanDetail from '../UserComponents/LoanDetail.js';
 
 const Stack = createStackNavigator();
 
 const LoanRequestScreen = ({ navigation }) => {
-  const loans = [
-    {
-      title: "Policy Loan",
-      subtitle: "Lowest interest as low as 0.18%",
-      amount: "$20,000",
-      interest: "0.18%",
-    },
-    {
-      title: "Personal Loan",
-      subtitle: "Flexible repayment options",
-      amount: "$15,000",
-      interest: "0.45%",
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false); 
+
+  const fetchLoans = async () => {
+    try {
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/loans'); // Update with your server address
+      if (!response.ok) {
+        throw new Error('Failed to fetch loans');
+      }
+      const data = await response.json();
+      setLoans(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+      setRefreshing(false); // Stop refreshing when done
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchLoans();
+  };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return <Text style={styles.errorText}>{error}</Text>;
+  }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
       {loans.map((loan, index) => (
         <View key={index} style={styles.card}>
           <View style={styles.infoContainer}>
             <Text style={styles.title}>{loan.title}</Text>
-            <Text style={styles.subtitle}>{loan.subtitle}</Text>
+            <Text style={styles.description}>{loan.description}</Text>
             <View style={styles.detailsContainer}>
               <View style={styles.details}>
                 <View style={styles.detailItem}>
@@ -66,7 +97,7 @@ const LoanRequest = () => {
         <Stack.Screen
           name="LoanDetail"
           component={LoanDetail}
-          options={{ headerTitle:'' }}
+          options={{ headerTitle: '' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -100,9 +131,10 @@ const styles = StyleSheet.create({
     marginBottom: 4.5,
     fontFamily: 'Poppins-Bold',
   },
-  subtitle: {
-    fontSize: 14.4,
-    color: '#666',
+  description: {
+    fontSize: 12.6,
+    color: '#999',
+    marginBottom: 8,
     fontFamily: 'Poppins-Normal',
   },
   detailsContainer: {
@@ -145,6 +177,11 @@ const styles = StyleSheet.create({
     fontSize: 14.4,
     fontFamily: 'Poppins-Bold',
     marginTop: 5,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

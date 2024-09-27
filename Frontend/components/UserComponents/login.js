@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Image, Platform, ScrollView } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, TextInput, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Image, Platform, ScrollView, Animated } from 'react-native';
 import axios from 'axios';
 
 const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isUsernameFocused, setIsUsernameFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
+  const usernameLabelAnim = useRef(new Animated.Value(0)).current;
+  const passwordLabelAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Username label animation
+    Animated.timing(usernameLabelAnim, {
+      toValue: isUsernameFocused || username !== '' ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false, // Removing native driver to animate fontSize
+    }).start();
+  }, [isUsernameFocused, username]);
+
+  useEffect(() => {
+    // Password label animation
+    Animated.timing(passwordLabelAnim, {
+      toValue: isPasswordFocused || password !== '' ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false, // Removing native driver to animate fontSize
+    }).start();
+  }, [isPasswordFocused, password]);
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/login', {username, password });
+      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/login', { username, password });
       const user = response.data;
 
       if (user.isAdmin) {
@@ -23,44 +46,68 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
   };
 
   const gotoRegister = () => {
-    navigation.navigate('SignUp'); // Use navigation to go to SignUp screen
+    navigation.navigate('SignUp');
   };
 
+  const labelStyle = (labelAnim) => ({
+    position: 'absolute',
+    left: 15,
+    top: labelAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [12, -25], // Moves label far above input field when focused
+    }),
+    fontSize: labelAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [15, 12], // Shrinks label text size (with JS driver)
+    }),
+    color: '#075eec',
+  });
+  
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Adjust if needed
+        keyboardVerticalOffset={Platform.OS === 'android' ? 100 : 0}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.innerContainer}>
             <View style={styles.header}>
               <Image source={require('../../assets/main_logo.png')} style={styles.headerImg} />
-              <Text style={styles.title}>Welcome to We-Together</Text>
-              <Text style={styles.subtitle}>Community Development App</Text>
+              <Text style={styles.title}>Login</Text>
+              <Text style={styles.subtitle}>Welcome To We-Together</Text>
             </View>
             <View style={styles.formContainer}>
               <View style={styles.form}>
                 <View style={styles.input}>
-                  <Text style={styles.inputLabel}>Email Address:</Text>
+                  {/* Username Input */}
+                  <Animated.Text style={labelStyle(usernameLabelAnim)}>
+                    Username:
+                  </Animated.Text>
                   <TextInput
                     autoCapitalize='none'
                     autoCorrect={false}
                     keyboardType='email-address'
                     style={styles.inputText}
-                    placeholder="Username"
+                    placeholder={isUsernameFocused || username !== '' ? '' : 'Username'}
                     placeholderTextColor="#003f5c"
+                    onFocus={() => setIsUsernameFocused(true)}
+                    onBlur={() => setIsUsernameFocused(false)}
                     onChangeText={(text) => setUsername(text)}
                   />
                 </View>
                 <View style={styles.input}>
-                  <Text style={styles.inputLabel}>Password:</Text>
+                  {/* Password Input */}
+                  <Animated.Text style={labelStyle(passwordLabelAnim)}>
+                    Password:
+                  </Animated.Text>
                   <TextInput
                     secureTextEntry
                     style={styles.inputText}
-                    placeholder="Password"
+                    placeholder={isPasswordFocused || password !== '' ? '' : 'Password'}
                     placeholderTextColor="#003f5c"
+                    onFocus={() => setIsPasswordFocused(true)}
+                    onBlur={() => setIsPasswordFocused(false)}
                     onChangeText={(text) => setPassword(text)}
                   />
                 </View>
@@ -68,7 +115,7 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
                 <View style={styles.formAction}>
                   <TouchableOpacity onPress={handleLogin}>
                     <View style={styles.btn}>
-                      <Text style={styles.btnText}>Sign In</Text>
+                      <Text style={styles.btnText}>Login</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -88,7 +135,7 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ebecf4',
+    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
@@ -111,14 +158,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 27,
-    fontWeight: '700',
     color: 'black',
     marginBottom: 6,
     textAlign: 'center',
+    fontFamily: 'Poppins-Bold',
   },
   subtitle: {
     textAlign: 'center',
     color: 'gray',
+    fontFamily: 'Poppins-SemiBold',
   },
   formContainer: {
     flex: 1,
@@ -128,46 +176,43 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   input: {
-    marginBottom: 16,
-  },
-  inputLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: 'black',
-    marginBottom: 8,
+    marginBottom: 28,
+    position: 'relative',
+    paddingTop: 0,
+    paddingBottom:5, // Add padding to create space for the animated label
   },
   inputText: {
-    backgroundColor: '#fff',
-    height: 44,
-    paddingHorizontal: 16,
+    backgroundColor: '#ebecf4',
+    height: 45,
+    paddingHorizontal: 15,
     borderRadius: 12,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: 'Poppins-Normal',
     color: '#222',
   },
   btn: {
     backgroundColor: '#075eec',
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    borderRadius: 50,
+    alignSelf:'center',
+    paddingVertical: 10,
+    width:150,
   },
   formAction: {
     marginVertical: 24,
   },
   btnText: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#fff',
+    textAlign:'center',
+    fontFamily:'Poppins-Bold',
+    top:2,
   },
   regBtn: {
     alignItems: 'center',
     marginBottom: 24,
   },
   regText: {
-    fontSize: 20,
+    fontSize: 15,
     textDecorationLine: 'underline',
     fontWeight: 'bold',
   },
@@ -175,7 +220,7 @@ const styles = StyleSheet.create({
     color: 'red',
     marginVertical: 10,
     textAlign: 'center',
-  }
+  },
 });
 
 export default Login;
