@@ -106,7 +106,15 @@ export default function App() {
               <Drawer.Screen name="Jobs" component={JobList} />
               <Drawer.Screen name="Loan Request" component={LoanRequest} />
               <Drawer.Screen name="Loan Status" component={LoanStatus} />
-              <Drawer.Screen name="Forum" component={Forum} />
+              <Drawer.Screen  name="Forum"  component={Forum} 
+                options={{
+                  headerShown: true, 
+                  headerStyle: { backgroundColor: '#024578' }, 
+                  headerTintColor: '#fff', 
+                  headerTitleAlign:'left',
+                }}
+              />
+
               <Drawer.Screen name="About Us" component={AboutUs} />
             </>
           )}

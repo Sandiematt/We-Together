@@ -101,7 +101,7 @@ const SignUp = ({ navigation }) => {
                   <TextInput
                     keyboardType='phone-pad'
                     style={styles.inputText}
-                    placeholder="+1234567890"
+                    placeholder="+91 234567890"
                     placeholderTextColor="#003f5c"
                     onChangeText={(text) => setContact(text)}
                   />
@@ -151,7 +151,7 @@ const SignUp = ({ navigation }) => {
               </View>
             </View>
             <View style={styles.loginBtn}>
-              <Text>Already have an account?</Text>
+              <Text style={styles.hehe}>Already have an account?</Text>
               <Text style={styles.loginText} onPress={gotoLogin}>Sign In</Text>
             </View>
           </View>
@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 27,
-    fontWeight: '700',
+    fontSize: 25,
+    fontFamily: 'Poppins-Bold', // Updated font family
     color: 'black',
     marginBottom: 6,
     textAlign: 'center',
@@ -203,8 +203,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
+    fontFamily: 'Poppins-Bold', // Updated font family
     color: 'black',
     marginBottom: 8,
   },
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 12,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: 'Poppins-Normal', // Updated font family
     color: '#222',
   },
   pickerContainer: {
@@ -228,35 +229,38 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: '#075eec',
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    borderRadius: 50,
+    alignSelf: 'center',
+    paddingVertical: 10,
+    width: 150,
   },
   formAction: {
     marginVertical: 24,
   },
   btnText: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#fff',
+    textAlign: 'center',
+    fontFamily: 'Poppins-Bold',
+    top: 2,
   },
   loginBtn: {
     alignItems: 'center',
     marginBottom: 24,
   },
   loginText: {
-    fontSize: 20,
+    fontSize: 15,
+    fontFamily: 'Poppins-Bold', // Updated font family
     textDecorationLine: 'underline',
-    fontWeight: 'bold',
   },
   errorText: {
     color: 'red',
     textAlign: 'center',
     marginBottom: 10,
+    fontFamily: 'Poppins-Normal', // Updated font family
   },
+
+  hehe:{fontSize:13,fontFamily:'Poppins-Normal',},
 });
 
 export default SignUp;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-
 const JobAdminDetail = ({ route }) => {
   const { job } = route.params; // Get job details from route params
   const selectedJobTitle = job.title; // Extract the job title
@@ -36,14 +35,10 @@ const JobAdminDetail = ({ route }) => {
     };
 
     fetchData();
-  }, [selectedJobTitle]);// Add selectedJobTitle as a dependency
+  }, [selectedJobTitle]); // Add selectedJobTitle as a dependency
   
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>JOB APPLICANTS</Text>
-      </View>
-
       <View style={styles.overview}>
         <View style={styles.overviewCard}>
           <Text style={styles.cardTitle}>Total Job Openings</Text>
@@ -71,7 +66,7 @@ const JobAdminDetail = ({ route }) => {
             </View>
           ))
         ) : (
-          <Text>No applicants available.</Text>
+          <Text style={styles.noApplicants}>No applicants available.</Text>
         )}
       </View>
     </ScrollView>
@@ -83,15 +78,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 10,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
   },
   overview: {
     flexDirection: 'row',
@@ -117,8 +103,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     top: 10,
   },
-
-  cardTitle1:{
+  cardTitle1: {
     fontSize: 13,
     color: '#333',
     fontFamily: 'Poppins-Bold',
@@ -181,6 +166,19 @@ const styles = StyleSheet.create({
   applicantAadhaar: {
     fontSize: 14,
     marginTop: 5,
+  },
+  noApplicants: {
+    fontSize: 18,
+    color: 'gray',
+    textAlign: 'center',
+    marginTop: 20,
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
+    padding: 10,
+    backgroundColor: '#f8f8f8', // Light background color for contrast
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    elevation: 1, // Shadow effect for depth
   },
 });
 

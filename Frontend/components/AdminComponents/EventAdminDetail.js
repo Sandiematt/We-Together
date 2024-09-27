@@ -8,7 +8,7 @@ const EventAdminDetail = ({ route }) => {
   useEffect(() => {
     const fetchParticipants = async () => {
       try {
-        const response = await fetch(`https://raccoon-summary-bluejay.ngrok-free.app/attendees?eventTitle=${encodeURIComponent(eventTitle)}`); // Replace with your backend URL
+        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/attendees?eventTitle=${encodeURIComponent(eventTitle)}`); // Replace with your backend URL
         
         // Check if the response is OK (status code 200-299)
         if (!response.ok) {
@@ -27,7 +27,6 @@ const EventAdminDetail = ({ route }) => {
     
     fetchParticipants();
   }, [eventTitle]);
-  
 
   // Function to toggle status between 'Present' and 'Absent' using participant's name
   const toggleStatus = async (name, newStatus) => {
@@ -63,12 +62,6 @@ const EventAdminDetail = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>{eventTitle} Participants</Text>
-      </View>
-
-      {/* Total Participants and Status Overview */}
       <View style={styles.overview}>
         <View style={styles.circle}>
           <Text style={styles.circleText}>{participants.length}</Text>
@@ -120,15 +113,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 2,
   },
-  header: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    padding: 15,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   overview: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -150,11 +134,13 @@ const styles = StyleSheet.create({
   },
   circleText: {
     fontSize: 24,
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
     fontWeight: 'bold',
   },
   circleLabel: {
     fontSize: 16,
     color: '#888',
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
   },
   overviewCard: {
     flex: 1,
@@ -172,12 +158,14 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     color: '#333',
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
   },
   participantsCount: {
     fontSize: 24,
     color: 'green',
     fontWeight: 'bold',
     marginTop: 10,
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
   },
   participantItem: {
     flexDirection: 'row',
@@ -198,11 +186,13 @@ const styles = StyleSheet.create({
   participantName: {
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
   },
   participantEmail: {
     color: '#666',
     fontSize: 14,
     marginTop: 5,
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
   },
   toggleButton: {
     paddingVertical: 5,
@@ -219,6 +209,7 @@ const styles = StyleSheet.create({
   toggleButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold', // Use your chosen font family
   },
 });
 

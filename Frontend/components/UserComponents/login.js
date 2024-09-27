@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, TextInput, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Image, Platform, ScrollView, Animated } from 'react-native';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons for eye icon
 
 const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
   const [username, setUsername] = useState('');
@@ -8,6 +9,7 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
   const [error, setError] = useState('');
   const [isUsernameFocused, setIsUsernameFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // State for password visibility
 
   const usernameLabelAnim = useRef(new Animated.Value(0)).current;
   const passwordLabelAnim = useRef(new Animated.Value(0)).current;
@@ -17,7 +19,7 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
     Animated.timing(usernameLabelAnim, {
       toValue: isUsernameFocused || username !== '' ? 1 : 0,
       duration: 200,
-      useNativeDriver: false, // Removing native driver to animate fontSize
+      useNativeDriver: false,
     }).start();
   }, [isUsernameFocused, username]);
 
@@ -26,15 +28,20 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
     Animated.timing(passwordLabelAnim, {
       toValue: isPasswordFocused || password !== '' ? 1 : 0,
       duration: 200,
-      useNativeDriver: false, // Removing native driver to animate fontSize
+      useNativeDriver: false,
     }).start();
   }, [isPasswordFocused, password]);
 
   const handleLogin = async () => {
+    if (!username || !password) {
+      setError('Username and Password are required.');
+      return;
+    }
+  
     try {
       const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/login', { username, password });
       const user = response.data;
-
+  
       if (user.isAdmin) {
         onAdminLogin();
       } else {
@@ -54,11 +61,11 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
     left: 15,
     top: labelAnim.interpolate({
       inputRange: [0, 1],
-      outputRange: [12, -25], // Moves label far above input field when focused
+      outputRange: [12, -25],
     }),
     fontSize: labelAnim.interpolate({
       inputRange: [0, 1],
-      outputRange: [15, 12], // Shrinks label text size (with JS driver)
+      outputRange: [15, 12],
     }),
     color: '#075eec',
   });
@@ -68,7 +75,7 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 100 : 0}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.innerContainer}>
@@ -101,15 +108,20 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
                   <Animated.Text style={labelStyle(passwordLabelAnim)}>
                     Password:
                   </Animated.Text>
-                  <TextInput
-                    secureTextEntry
-                    style={styles.inputText}
-                    placeholder={isPasswordFocused || password !== '' ? '' : 'Password'}
-                    placeholderTextColor="#003f5c"
-                    onFocus={() => setIsPasswordFocused(true)}
-                    onBlur={() => setIsPasswordFocused(false)}
-                    onChangeText={(text) => setPassword(text)}
-                  />
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      secureTextEntry={!isPasswordVisible} // Change visibility based on state
+                      style={styles.inputText}
+                      placeholder={isPasswordFocused || password !== '' ? '' : 'Password'}
+                      placeholderTextColor="#003f5c"
+                      onFocus={() => setIsPasswordFocused(true)}
+                      onBlur={() => setIsPasswordFocused(false)}
+                      onChangeText={(text) => setPassword(text)}
+                    />
+                    <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={styles.eyeIconContainer}>
+                      <Icon name={isPasswordVisible ? 'eye-off' : 'eye'} size={24} color="#075eec" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 {error ? <Text style={styles.errorText}>{error}</Text> : null}
                 <View style={styles.formAction}>
@@ -122,7 +134,7 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
               </View>
             </View>
             <View style={styles.regBtn}>
-              <Text>Don't have an account?</Text>
+              <Text style={styles.hehe}>Don't have an account?</Text>
               <Text style={styles.regText} onPress={gotoRegister}>Sign Up</Text>
             </View>
           </View>
@@ -137,11 +149,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  container: {
-    flex: 1,
-  },
   scrollContainer: {
     flexGrow: 1,
+    position:'static',
   },
   innerContainer: {
     flex: 1,
@@ -171,15 +181,22 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     justifyContent: 'center',
+    top: 80,
   },
   form: {
-    marginBottom: 24,
+    marginBottom: 150,
   },
   input: {
     marginBottom: 28,
     position: 'relative',
     paddingTop: 0,
-    paddingBottom:5, // Add padding to create space for the animated label
+    paddingBottom: 5,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'relative', // Set position to relative for absolute positioning of icon
   },
   inputText: {
     backgroundColor: '#ebecf4',
@@ -189,13 +206,19 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Poppins-Normal',
     color: '#222',
+    flex: 1,
+  },
+  eyeIconContainer: {
+    position: 'absolute',
+    right: 15, // Adjust position as needed
+    top: 10, // Center the icon vertically
   },
   btn: {
     backgroundColor: '#075eec',
     borderRadius: 50,
-    alignSelf:'center',
+    alignSelf: 'center',
     paddingVertical: 10,
-    width:150,
+    width: 150,
   },
   formAction: {
     marginVertical: 24,
@@ -203,9 +226,9 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 16,
     color: '#fff',
-    textAlign:'center',
-    fontFamily:'Poppins-Bold',
-    top:2,
+    textAlign: 'center',
+    fontFamily: 'Poppins-Bold',
+    top: 2,
   },
   regBtn: {
     alignItems: 'center',
@@ -214,7 +237,10 @@ const styles = StyleSheet.create({
   regText: {
     fontSize: 15,
     textDecorationLine: 'underline',
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
+  },
+  hehe: {
+    fontFamily: 'Poppins-Normal',
   },
   errorText: {
     color: 'red',

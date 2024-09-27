@@ -290,58 +290,70 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
         res.status(500).json({ error: 'Internal server error' });
       }
     });
+// Fetch all posts
+app.get('/posts', async (req, res) => {
+  try {
+    const posts = await postsCollection.find({}).toArray();
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-    // Forum posts endpoint
-    app.get('/posts', async (req, res) => {
-      try {
-        const posts = await postsCollection.find({}).toArray();
-        res.status(200).json(posts);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
+// Create forum post endpoint
+app.post('/posts', async (req, res) => {
+  try {
+    const { user, content, image } = req.body;
+
+    const result = await postsCollection.insertOne({
+      user,
+      content,
+      image,
+      likes: [], // Ensure likes is initialized as an empty array
     });
 
-    // Create forum post endpoint
-    app.post('/posts', async (req, res) => {
-      try {
-        const { author, title, content } = req.body;
-
-        const result = await postsCollection.insertOne({
-          author,
-          title,
-          content,
-          likes: 0,
-        });
-
-        res.status(201).json({ message: 'Post created successfully', postId: result.insertedId });
-      } catch (error) {
-        console.error('Error creating post:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
+    res.status(201).json({ 
+      _id: result.insertedId, // Return the newly created post ID
+      user,
+      content,
+      image,
+      likes: [] // Send back the initial empty likes array
     });
+  } catch (error) {
+    console.error('Error creating post:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-    // Update post likes endpoint
-    app.post('/posts/:postId/like', async (req, res) => {
-      try {
-        const { postId } = req.params;
+// Like a post
+app.post('/posts/:id/like', async (req, res) => {
+  const { id } = req.params;
+  const { user } = req.body;
 
-        const result = await postsCollection.findOneAndUpdate(
-          { _id: new ObjectId(postId) },
-          { $inc: { likes: 1 } },
-          { returnOriginal: false }
-        );
+  try {
+    const post = await postsCollection.findOne({ _id: new ObjectId(id) });
 
-        if (!result.value) {
-          return res.status(404).json({ error: 'Post not found' });
-        }
+    if (!post) return res.status(404).json({ error: 'Post not found' });
 
-        res.status(200).json({ message: 'Post liked successfully', post: result.value });
-      } catch (error) {
-        console.error('Error liking post:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    });
+    // Ensure likes is an array
+    const likes = Array.isArray(post.likes) ? post.likes : [];
+
+    const isLiked = likes.includes(user);
+    const update = isLiked
+      ? { $pull: { likes: user } }
+      : { $addToSet: { likes: user } }; // Use $addToSet to avoid duplicates
+
+    await postsCollection.updateOne({ _id: new ObjectId(id) }, update);
+    
+    res.status(200).json({ message: 'Like updated', likes: isLiked ? likes.length - 1 : likes.length + 1 });
+  } catch (error) {
+    console.error('Error liking post:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
     // Start the server
     app.listen(PORT, () => {
