@@ -8,14 +8,14 @@ export default function EventAttendance() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [name, setName] = useState('');
-  const [email, setemail] = useState(''); // Using email as email
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
   // Fetch events from the backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events');
+        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/events');
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -28,45 +28,41 @@ export default function EventAttendance() {
     fetchEvents();
   }, []);
 
-//submit attend
+  // Submit attendance
   const handleSubmit = async () => {
-  if (!name || !email) {
-    setError('Please fill in all details.');
-    return;
-  }
-
-  try {
-    const response = await fetch('https://boss-turkey-happily.ngrok-free.app/attend', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        eventTitle: selectedEvent.title, // Use the event title instead of ID
-      }),
-    });
-
-    const data = await response.json();
-
-    // Check for the response status and/or the exact message
-    if (response.status === 201 && data.message === "User registered successfully for event") {
-      setModalVisible(false);
-      setName('');
-      setemail('');
-      setError('');
-    } else {
-      setError('Failed to register.');
+    if (!name || !email) {
+      setError('Please fill in all details.');
+      return;
     }
-  } catch (err) {
-    console.error('Post error:', err);
-    setError('Post failed. Please try again.');
-  }
-};
 
-  
-  
+    try {
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/attend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          eventTitle: selectedEvent.title,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 201 && data.message === "User registered successfully for event") {
+        setModalVisible(false);
+        setName('');
+        setEmail('');
+        setError('');
+      } else {
+        setError('Failed to register.');
+      }
+    } catch (err) {
+      console.error('Post error:', err);
+      setError('Post failed. Please try again.');
+    }
+  };
 
   if (loading) {
     return (
@@ -78,11 +74,11 @@ export default function EventAttendance() {
 
   return (
     <ScrollView style={styles.container}>
-      {events.map((event, index) => (
+      {events.map((event) => (
         <View style={styles.card} key={event._id}>
           <Image
             style={styles.cardImage}
-            source={{ uri: event.image || `https://picsum.photos/700?random=${index}` }}
+            source={{ uri: `https://picsum.photos/400/200?random=${event._id}` }} 
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
@@ -90,10 +86,12 @@ export default function EventAttendance() {
             <View style={styles.detailsContainer}>
               <View>
                 <Text style={styles.contentDetails}>
-                  <Icon name="map-marker" size={14} color="#999" /> Venue: {event.venue}, {event.place}
+                  <Icon name="map-marker" size={20} color="#FF6347" alignItems="left" /> {/* Bigger colored location icon */}
+                  {` ${event.venue}, ${event.place}`}
                 </Text>
                 <Text style={styles.contentDetails}>
-                  <Icon name="calendar" size={14} color="#999" /> Date: {new Date(event.date).toLocaleDateString()} at {event.time}
+                  <Icon name="calendar" size={20} color="#4682B4" /> {/* Bigger colored date icon */}
+                  {` ${new Date(event.date).toLocaleDateString()} at ${event.time}`}
                 </Text>
               </View>
               <TouchableOpacity
@@ -130,7 +128,7 @@ export default function EventAttendance() {
               style={styles.input}
               placeholder="Email"
               value={email}
-              onChangeText={setemail}
+              onChangeText={setEmail}
               keyboardType="email-address"
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -153,31 +151,36 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    borderRadius: 15,
     marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
     overflow: 'hidden',
   },
   cardImage: {
     width: '100%',
-    height: 180,
-    backgroundColor: '#ccc',
+    height: 200,
+    resizeMode: 'cover',
   },
   cardContent: {
     padding: 15,
   },
   contentTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
+    marginBottom: 5,
   },
   contentText: {
     fontSize: 14,
     color: '#666',
-    marginVertical: 10,
+    marginBottom: 10,
   },
   detailsContainer: {
     flexDirection: 'row',
@@ -187,16 +190,20 @@ const styles = StyleSheet.create({
   contentDetails: {
     fontSize: 12,
     color: '#999',
+    marginBottom: 5,
+    flexDirection: 'row', // Align icon and text horizontally
+    alignItems: 'center', // Center align icons with text
   },
   button: {
     backgroundColor: '#007BFF',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignSelf: 'flex-end',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
   },
   loader: {
     flex: 1,
@@ -212,8 +219,9 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: '#fff',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 15,
     width: '80%',
+    elevation: 5,
   },
   modalTitle: {
     fontSize: 18,
@@ -225,8 +233,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     marginBottom: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    padding: 10,
   },
   modalButtons: {
     flexDirection: 'row',

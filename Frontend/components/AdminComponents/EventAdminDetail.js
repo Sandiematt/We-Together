@@ -8,7 +8,7 @@ const EventAdminDetail = ({ route }) => {
   useEffect(() => {
     const fetchParticipants = async () => {
       try {
-        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/attendees?eventTitle=${encodeURIComponent(eventTitle)}`); // Replace with your backend URL
+        const response = await fetch(`https://raccoon-summary-bluejay.ngrok-free.app/attendees?eventTitle=${encodeURIComponent(eventTitle)}`); // Replace with your backend URL
         
         // Check if the response is OK (status code 200-299)
         if (!response.ok) {
