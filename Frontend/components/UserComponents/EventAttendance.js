@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 // Import local images
 const localImages = {
   event1: require('../../assets/event1.jpg'),
-  event2: require('../../assets/event2.jpg'),
-  event3: require('../../assets/event3.jpg'),
-  event4: require('../../assets/event4.jpg'),
+  event4: require('../../assets/event2.jpg'),
+  event2: require('../../assets/event3.jpg'),
+  event3: require('../../assets/event4.jpg'),
   event5: require('../../assets/event5.jpg'),
 };
 
@@ -25,7 +25,7 @@ export default function EventAttendance() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events');
+        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/events');
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -43,15 +43,26 @@ export default function EventAttendance() {
     event.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Submit attendance
+  // Submit attendance with proper name and email format 
   const handleSubmit = async () => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
     if (!name || !email) {
       setError('Please fill in all details.');
       return;
     }
+    if (!nameRegex.test(name)) {
+      setError('Name should only contain letters.');
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
 
     try {
-      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/attend', {
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/attend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,6 +77,8 @@ export default function EventAttendance() {
       const data = await response.json();
 
       if (response.status === 201 && data.message === "User registered successfully for event") {
+        setError(''); // Clear any existing errors
+        alert('Submitted successfully!');
         setModalVisible(false);
         setName('');
         setEmail('');
@@ -88,8 +101,7 @@ export default function EventAttendance() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header with background image or color and title */}
+    <ScrollView style={styles.container}> 
       <View style={styles.header}>
         <Text style={styles.headerText}>Explore New Events !!</Text>
         <TextInput
@@ -97,7 +109,7 @@ export default function EventAttendance() {
           placeholder="Search events..."
           value={searchTerm}
           onChangeText={setSearchTerm}
-          placeholderTextColor="#999" // Optional: Set color for placeholder text
+          placeholderTextColor="#999" 
         />
       </View>
 
@@ -105,7 +117,7 @@ export default function EventAttendance() {
         <View style={styles.card} key={event._id}>
           <Image
             style={styles.cardImage}
-            source={localImages[`event${index + 1}`]}  // Use local images based on index
+            source={localImages[`event${index + 1}`]}  
           />
           <View style={styles.cardContent}>
             <Text style={styles.contentTitle}>{event.title}</Text>
@@ -113,7 +125,7 @@ export default function EventAttendance() {
             <View style={styles.detailsContainer}>
               <View>
                 <Text style={styles.contentDetails}>
-                  <Icon name="map-marker" size={20} color="#FF6347" alignItems="left" /> {/* Bigger colored location icon */}
+                  <Icon name="map-marker" size={20} color="#FF6347" alignItems="left" /> 
                   {` ${event.venue}, ${event.place}`}
                 </Text>
                 <Text style={styles.contentDetails}>
@@ -202,8 +214,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
-    // Add the fontFamily for the search input
-    fontFamily: 'Poppins-Regular', // Use a regular font instead of bold for the search bar
+    fontFamily: 'Poppins-Regular', 
   },
   card: {
     backgroundColor: '#fff',
@@ -248,8 +259,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#999',
     marginBottom: 5,
-    flexDirection: 'row', // Align icon and text horizontally
-    alignItems: 'center', // Center align icons with text
+    flexDirection: 'row', 
+    alignItems: 'center', 
   },
   button: {
     backgroundColor: '#5A67D8',
