@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, FlatList, StyleSheet, Platform, PermissionsAndroid } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -10,13 +12,29 @@ const Forum = () => {
   const [currentUser, setCurrentUser] = useState(''); // State for the current user's name
 
   useEffect(() => {
+    fetchUserData();
     fetchPosts();
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const storedUsername = await AsyncStorage.getItem('username'); // Retrieve username from AsyncStorage
+      if (storedUsername) {
+        // Fetch user data from the API using the stored username
+        const response = await axios.get(`https://boss-turkey-happily.ngrok-free.app/users/${storedUsername}`);
+        setCurrentUser(response.data.username); // Set username from API response
+      } else {
+        console.log('No username found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error.message);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
       const response = await fetch('https://boss-turkey-happily.ngrok-free.app/posts');
-      if (!response.ok) throw new Error(`Error fetching posts: ${response.status}`);
+      if (!response.ok) throw new Error(`Error fetching posts: ${response.status} - ${response.statusText}`);
       const data = await response.json();
       setPosts(data);
     } catch (error) {
@@ -62,11 +80,11 @@ const Forum = () => {
   const handlePost = async () => {
     if (newPost.trim() || newImage) {
       const newPostData = {
-        user: 'Sanjay ', 
+        user: currentUser, // Use the current user's name from state
         content: newPost,
         image: newImage,
       };
-
+  
       try {
         const response = await fetch('https://boss-turkey-happily.ngrok-free.app/posts', {
           method: 'POST',
@@ -75,13 +93,16 @@ const Forum = () => {
           },
           body: JSON.stringify(newPostData),
         });
-
+  
         if (!response.ok) throw new Error(`Error posting: ${response.status}`);
-
+  
         const data = await response.json();
-        setPosts([data, ...posts]);
+        setPosts([data, ...posts]); // Add the new post to the local state
         setNewPost('');
         setNewImage(null);
+  
+        // Refresh the posts list to include the latest posts from the server
+        fetchPosts();
       } catch (error) {
         console.error('handlePost Error:', error.message);
       }
@@ -89,56 +110,66 @@ const Forum = () => {
   };
 
   const handleLike = async (postId) => {
-    try {
-      // Send like request to the server
-      const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/posts/${postId}/like`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user: currentUser }), // Pass the current user's name
-      });
-
-      if (!response.ok) throw new Error(`Error liking post: ${response.status}`);
-      
-      // Update the local state with the new likes
-      const updatedPosts = posts.map(post => {
-        if (post._id === postId) {
-          const likes = Array.isArray(post.likes) ? post.likes : [];
-          const isLiked = likes.includes(currentUser);
-          return {
-            ...post,
-            likes: isLiked ? likes.filter(user => user !== currentUser) : [...likes, currentUser],
-          };
-        }
-        return post;
-      });
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.error('handleLike Error:', error.message);
+    if (!postId) {
+        console.error('Post ID is undefined');
+        return;
     }
-  };
 
-  const renderPost = ({ item }) => (
-    <View style={styles.postContainer}>
-      <View style={styles.header}>
-        <Text style={styles.username}>{item.user}</Text>
+    try {
+        // Check if the current user has liked the post
+        const post = posts.find(post => post._id === postId);
+        const hasLiked = post.likes.includes(currentUser);
+
+        // Toggle like/unlike
+        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/posts/${postId}/${hasLiked ? 'unlike' : 'like'}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user: currentUser }),
+        });
+
+        if (!response.ok) throw new Error(`Error ${hasLiked ? 'unliking' : 'liking'} post: ${response.status}`);
+
+        const updatedPost = await response.json();
+
+        // Update local state with the new likes array
+        const updatedPosts = posts.map(post => {
+            if (post._id === postId) {
+                return updatedPost.updatedPost; // Use the updated post from the response
+            }
+            return post;
+        });
+
+        setPosts(updatedPosts);
+    } catch (error) {
+        console.error('handleLike Error:', error.message);
+    }
+};
+  
+  
+  const renderPost = ({ item }) => {
+    return (
+      <View style={styles.postContainer}>
+        <View style={styles.header}>
+          <Text style={styles.username}>{item.user}</Text>
+        </View>
+        <Text style={styles.content}>{item.content}</Text>
+        {item.image && <Image source={{ uri: item.image }} style={styles.image} />}
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.likeButton} onPress={() => handleLike(item._id)}>
+            <Icon name={item.likes && item.likes.includes(currentUser) ? "heart" : "heart-outline"} size={24} color="red" />
+            <Text style={styles.likesCount}>{item.likes ? item.likes.length : 0}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Text style={styles.content}>{item.content}</Text>
-      {item.image && <Image source={{ uri: item.image }} style={styles.image} />}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.likeButton} onPress={() => handleLike(item._id)}>
-          <Icon name="heart" size={24} color="red" />
-          <Text style={styles.likesCount}>{item.likes ? item.likes.length : 0}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}> 
       <View style={styles.headerContainer}>
-      <Text style={styles.headerText}>Share your thoughts</Text>
+        <Text style={styles.headerText}>Share your thoughts...</Text>
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
@@ -163,7 +194,7 @@ const Forum = () => {
       <FlatList
         data={posts}
         renderItem={renderPost}
-        keyExtractor={item => item._id} // Ensure each item has a unique key
+        keyExtractor={item => item._id}
       />
     </View>
   );
@@ -173,8 +204,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 0,
     backgroundColor: '#f5f5f5',
-    marginTop:0,
-    padding:0,
+    marginTop: 0,
+    padding: 0,
   },
   postContainer: {
     padding: 15,
@@ -228,39 +259,45 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   searchInput: {
     flex: 1,
-    padding: 10,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    marginRight: 10,
+    height: 50,
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    color: 'white',
   },
   iconButton: {
-    marginRight: 10,
+    marginLeft: 10,
   },
   postButton: {
-    backgroundColor: '#E53E3E',
-    padding: 13,
-    borderRadius: 10,
+    marginLeft: 10,
+    backgroundColor: 'green',
+    borderRadius: 5,
+    padding: 10,
+    width: 80,
     alignItems: 'center',
   },
   postButtonText: {
-    color: 'white',
+    color: '#fff',
     fontWeight: 'bold',
   },
   postMessage: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    padding: 10,
+    marginTop: 20,
+    marginBottom: 10,
+    paddingHorizontal: 20,
   },
   selectedImage: {
     width: '100%',
     height: 200,
     borderRadius: 10,
-    marginVertical: 10,
+    marginTop: 10,
   },
 });
 
-export default Forum;  
+export default Forum;

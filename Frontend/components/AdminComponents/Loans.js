@@ -77,7 +77,7 @@ const LoansScreen = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('LoanDetail')}
+                onPress={() => navigation.navigate('LoanAdminDetail', { loanTitle: loan.title })}
               >
                 <Text style={styles.buttonText}>View Details</Text>
               </TouchableOpacity>
@@ -99,7 +99,7 @@ const Loans = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="LoanDetail"
+          name="LoanAdminDetail"
           component={LoanAdminDetail}
           options={{ headerTitle:'' }}
         />

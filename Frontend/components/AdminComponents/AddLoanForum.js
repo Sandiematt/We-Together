@@ -10,7 +10,7 @@ export default function AddLoanForm() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/loanapplicants', {
+      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/loans', {
         title,            // Use title instead of loanName
         description,
         interest: `${interest}%`, // Append % sign to interest

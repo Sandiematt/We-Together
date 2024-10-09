@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MakeAdminForum from './MakeAdminForum'; // Import your MakeAdminForum component
 
-export default function HomeScreenAdmin({ handleLogout }) {
-  const navigation = useNavigation();
+const Stack = createNativeStackNavigator();
+
+const HomeScreenAdmin = ({ handleLogout ,navigation}) => {
   const [userCount, setUserCount] = useState(0);
 
   useEffect(() => {
@@ -45,47 +47,63 @@ export default function HomeScreenAdmin({ handleLogout }) {
   };
 
   const handleEventPress = () => {
-    navigation.navigate('Events');
+    navigation.navigate('Events')
   };
 
   return (
-    <View style={styles.container}>
-      {/* User Count Section */}
-      <View style={styles.userCountSection}>
-        <View style={styles.circle}>
-          <Text style={styles.userCountText}>{userCount}</Text>
-          <Text style={styles.userText}>Users</Text>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleEventPress}>
-            <Icon name="event" color="black" size={20} />
-            <Text style={styles.buttonText}>Create Event</Text>
-          </TouchableOpacity>
+    <Stack.Navigator>
+      <Stack.Screen name="Home" options={{ headerShown: false }}>
+        {() => (
+          <View style={styles.container}>
+            {/* User Count Section */}
+            <View style={styles.userCountSection}>
+              <View style={styles.circle}>
+                <Text style={styles.userCountText}>{userCount}</Text>
+                <Text style={styles.userText}>Users</Text>
+              </View>
+              <View style={styles.buttonsContainer}>
+                <TouchableOpacity style={styles.button} onPress={handleEventPress}>
+                  <Icon name="event" color="black" size={20} />
+                  <Text style={styles.buttonText}>Create Event</Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={handleCreateJobPress}>
-            <Icon name="add" color="black" size={20} />
-            <Text style={styles.buttonText}>Create Job</Text>
-          </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={handleCreateJobPress}>
+                  <Icon name="add" color="black" size={20} />
+                  <Text style={styles.buttonText}>Create Job</Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogoutPress}>
-            <Icon name="logout" color="white" size={20} />
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+                {/* New Make Admin button */}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => navigation.navigate('MakeAdminForum')}
+                >
+                  <Icon name="admin-panel-settings" color="black" size={20} />
+                  <Text style={styles.buttonText}>Make Admin</Text>
+                </TouchableOpacity>
 
-      {/* Upcoming Events Section */}
-      <View style={styles.upcomingEventsSection}>
-        <Text style={styles.upcomingEventsText}>Upcoming Events..</Text>
-        <Image
-          style={styles.noEventsImage}
-          source={{ uri: 'https://img.icons8.com/ios/452/nothing-found.png' }}
-        />
-        <Text style={styles.noEventsText}>No Upcoming Events</Text>
-      </View>
-    </View>
+                <TouchableOpacity style={styles.logoutButton} onPress={handleLogoutPress}>
+                  <Icon name="logout" color="white" size={20} />
+                  <Text style={styles.logoutText}>Logout</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Upcoming Events Section */}
+            <View style={styles.upcomingEventsSection}>
+              <Text style={styles.upcomingEventsText}>Upcoming Events..</Text>
+              <Image
+                style={styles.noEventsImage}
+                source={{ uri: 'https://img.icons8.com/ios/452/nothing-found.png' }}
+              />
+              <Text style={styles.noEventsText}>No Upcoming Events</Text>
+            </View>
+          </View>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="MakeAdminForum" component={MakeAdminForum} options={{ title: '' }} />
+    </Stack.Navigator>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -166,3 +184,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
   },
 });
+
+export default HomeScreenAdmin;

@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, TextInput, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Image, Platform, ScrollView, Animated } from 'react-native';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons for eye icon
+import Icon from 'react-native-vector-icons/Ionicons'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// Import Ionicons for eye icon
 
 const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
   const [username, setUsername] = useState('');
@@ -42,12 +44,20 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
       const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/login', { username, password });
       const user = response.data;
   
+      // Store the username in AsyncStorage
+      if (user.username) {
+        await AsyncStorage.setItem('username', user.username);
+      } else {
+        console.error('Username not found in response');
+      }
+  
       if (user.isAdmin) {
         onAdminLogin();
       } else {
         onLoginSuccess();
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('Login failed. Please check your credentials.');
     }
   };

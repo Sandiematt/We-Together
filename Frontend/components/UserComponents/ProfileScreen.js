@@ -1,8 +1,27 @@
-import React from 'react';
-import { View, StyleSheet, Image, Text, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
-import { Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Image, Text, ScrollView, ImageBackground, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const ProfileScreen = ({ handleLogout }) => {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const storedUsername = await AsyncStorage.getItem('username');
+        if (storedUsername) {
+          const response = await axios.get(`https://boss-turkey-happily.ngrok-free.app/users/${storedUsername}`);
+          setUserData(response.data);
+        }
+      } catch (error) {
+        console.log('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleLogoutPress = () => {
     Alert.alert(
       "Logout Confirmation",
@@ -11,12 +30,12 @@ const ProfileScreen = ({ handleLogout }) => {
         {
           text: "No",
           onPress: () => console.log("Logout cancelled"),
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Yes",
           onPress: () => handleLogout(), // Calls the logout function if confirmed
-        }
+        },
       ],
       { cancelable: false }
     );
@@ -38,22 +57,22 @@ const ProfileScreen = ({ handleLogout }) => {
         <View style={styles.card}>
           <View style={styles.cardItem}>
             <Text style={styles.label}>Name:</Text>
-            <Text style={styles.value}>John Doe</Text>
+            <Text style={styles.value}>{userData ? userData.name : 'Loading...'}</Text>
           </View>
           <View style={styles.line} />
           <View style={styles.cardItem}>
             <Text style={styles.label}>Email:</Text>
-            <Text style={styles.value}>johndoe@example.com</Text>
+            <Text style={styles.value}>{userData ? userData.email : 'Loading...'}</Text>
           </View>
           <View style={styles.line} />
           <View style={styles.cardItem}>
             <Text style={styles.label}>Phone:</Text>
-            <Text style={styles.value}>+1234567890</Text>
+            <Text style={styles.value}>{userData ? userData.contact : 'Loading...'}</Text>
           </View>
           <View style={styles.line} />
           <View style={styles.cardItem}>
             <Text style={styles.label}>Gender:</Text>
-            <Text style={styles.value}>Male</Text>
+            <Text style={styles.value}>{userData ? userData.gender : 'Loading...'}</Text>
           </View>
         </View>
       </View>
