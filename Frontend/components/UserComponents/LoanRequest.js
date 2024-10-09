@@ -73,7 +73,7 @@ const LoanRequestScreen = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('LoanDetail')}
+                onPress={() => navigation.navigate('LoanDetail', { loanTitle: loan.title, loanDescription: loan.description })} // Pass the loan details
               >
                 <Text style={styles.buttonText}>Apply Now</Text>
               </TouchableOpacity>

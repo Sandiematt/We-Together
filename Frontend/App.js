@@ -92,7 +92,6 @@ export default function App() {
                 {(props) => <HomeScreenAdmin {...props} handleLogout={handleLogout} />}
               </Drawer.Screen>
               <Drawer.Screen name="Loans" component={Loans} />
-              <Drawer.Screen name="Loan Approval" component={LoanApprovalDetail} />
               <Drawer.Screen name="Jobs" component={AdminJobs} />
               <Drawer.Screen name="Events" component={AdminEvents} />
             </>

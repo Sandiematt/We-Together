@@ -2,13 +2,12 @@ import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
 const events = [
-  { id: '1', title: 'Community Clean-Up', date: 'July 30, 2024' },
-  { id: '2', title: 'Charity Run', date: 'August 12, 2024' },
+  { id: '1', title: 'Community Clean-Up', date: 'July 30, 2024', image: require('../../assets/event2.jpg') },
+  { id: '2', title: 'Charity Run', date: 'August 12, 2024', image: require('../../assets/event4.jpg') },
 ];
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -28,7 +27,7 @@ const HomeScreen = ({navigation}) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.courseContainer}>
-            <Image source={require('../../assets/52068.jpg')} style={styles.courseImage} />
+            <Image source={item.image} style={styles.courseImage} />
             <View style={styles.courseDetails}>
               <Text style={styles.courseTitle}>{item.title}</Text>
               <Text style={styles.courseLessons}>{item.date}</Text>
@@ -54,14 +53,14 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 30,
     color: '#fff',
-    top:10,
-    fontFamily:'Poppins-Bold',
+    top: 10,
+    fontFamily: 'Poppins-Bold',
   },
   subHeaderText: {
     fontSize: 16,
     color: '#fff',
     marginVertical: 10,
-    fontFamily:'Poppins-Normal'
+    fontFamily: 'Poppins-Normal',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -69,7 +68,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     paddingHorizontal: 18,
-    fontFamily:'Poppins-Normal',
   },
   searchInput: {
     flex: 1,
@@ -84,42 +82,55 @@ const styles = StyleSheet.create({
   startLearningText: {
     color: '#fff',
     textAlign: 'center',
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   sectionTitle: {
     fontSize: 23,
-
     marginVertical: 20,
     marginHorizontal: 20,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
   },
   courseContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F2F4F3',
-    padding: 30,
+    padding: 15,
     marginHorizontal: 15,
-    
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   courseImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 80,
+    height: 80,
+    borderRadius: 10,
     marginRight: 10,
   },
   courseDetails: {
     flex: 1,
-    marginLeft:10,
+    justifyContent: 'center',
   },
   courseTitle: {
     fontSize: 16,
-    fontFamily:'Poppins-Bold',
+    fontFamily: 'Poppins-Bold',
+    marginBottom: 5,
+    marginLeft:10,
   },
-  
-  
-  
+  courseLessons: {
+    fontSize: 14,
+    color: '#555',
+    marginLeft:10,
+    fontFamily: 'Poppins-Normal',
+  },
+  playButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
 });
 
 export default HomeScreen;
