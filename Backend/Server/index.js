@@ -280,6 +280,24 @@ const MONGODB_URI = 'mongodb+srv://sandeepmathew:sandie123@wetogether.ejhyhqg.mo
           res.status(500).json({ error: 'Internal server error' });
       }
   });
+
+  app.get('/loanapplicantsadmin', async (req, res) => {
+    const { loantitle } = req.query;
+  
+    try {
+      // Check if the loan title is provided
+      if (!loantitle) {
+        return res.status(400).json({ error: 'Loan title is required' });
+      }
+  
+      // Fetch applicants based on the loan title
+      const applicants = await loanApplicantsCollection.find({ loantitle }).toArray(); // Ensure to match the field name in the collection
+      res.status(200).json(applicants);
+    } catch (error) {
+      console.error('Error fetching loan applicants:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
   
     
     // Update loan status

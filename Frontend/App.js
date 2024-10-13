@@ -22,7 +22,7 @@ import SignUp from './components/UserComponents/SignUp';
 import Loans from './components/AdminComponents/Loans';
 import AdminJobs from './components/AdminComponents/AdminJobs';
 import AdminEvents from './components/AdminComponents/Events';
-import LoanApprovalDetail from './components/AdminComponents/LoanApproval';
+
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();

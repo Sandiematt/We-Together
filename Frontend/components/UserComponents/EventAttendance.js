@@ -25,7 +25,7 @@ export default function EventAttendance() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/events');
+        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events');
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -62,7 +62,7 @@ export default function EventAttendance() {
     }
 
     try {
-      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/attend', {
+      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/attend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

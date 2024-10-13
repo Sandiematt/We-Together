@@ -8,7 +8,7 @@ const LoanAdminDetail = ({ route }) => {
   useEffect(() => {
     const fetchApplicants = async () => {
       try {
-        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/loanapplicants?loantitle=${encodeURIComponent(loanTitle)}`); // Replace with your backend URL
+        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/loanapplicantsadmin?loantitle=${encodeURIComponent(loanTitle)}`); // Replace with your backend URL
         
         if (!response.ok) {
           throw new Error(`Server Error: ${response.status}`);
