@@ -164,16 +164,6 @@ npm install
 ### Get in Touch
 - 📧 Email: sandeepmathew098@gmail.com
 
-## 🌟 Support Us
-
-<div align="center">
-
-[![Star on GitHub](https://img.shields.io/github/stars/your-username/we-together.svg?style=social)](https://github.com/your-username/we-together/stargazers)
-[![Follow on Twitter](https://img.shields.io/twitter/follow/wetogether.svg?style=social)](https://twitter.com/wetogether)
-
-</div>
-
----
 
 <div align="center">
 
