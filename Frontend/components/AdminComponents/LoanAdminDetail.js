@@ -8,7 +8,11 @@ const LoanAdminDetail = ({ route }) => {
   useEffect(() => {
     const fetchApplicants = async () => {
       try {
+<<<<<<< HEAD
         const response = await fetch(`https://raccoon-summary-bluejay.ngrok-free.app/loanapplicantsadmin?loantitle=${encodeURIComponent(loanTitle)}`); // Replace with your backend URL
+=======
+        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/loanapplicantsadmin?loantitle=${encodeURIComponent(loanTitle)}`); // Replace with your backend URL
+>>>>>>> 4bbc376c0d638fdd4c31021f264742a9ee3edd80
         
         if (!response.ok) {
           throw new Error(`Server Error: ${response.status}`);
