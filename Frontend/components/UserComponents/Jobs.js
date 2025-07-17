@@ -46,7 +46,7 @@ const JobList = ({ navigation }) => {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs'); // Replace with your server URL
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/jobs'); // Replace with your server URL
       const data = await response.json();
       setJobs(data);
     } catch (error) {

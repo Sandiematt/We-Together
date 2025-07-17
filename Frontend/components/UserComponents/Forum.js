@@ -21,7 +21,7 @@ const Forum = () => {
       const storedUsername = await AsyncStorage.getItem('username'); // Retrieve username from AsyncStorage
       if (storedUsername) {
         // Fetch user data from the API using the stored username
-        const response = await axios.get(`https://boss-turkey-happily.ngrok-free.app/users/${storedUsername}`);
+        const response = await axios.get(`https://raccoon-summary-bluejay.ngrok-free.app/users/${storedUsername}`);
         setCurrentUser(response.data.username); // Set username from API response
       } else {
         console.log('No username found in AsyncStorage');
@@ -33,7 +33,7 @@ const Forum = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/posts');
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/posts');
       if (!response.ok) throw new Error(`Error fetching posts: ${response.status} - ${response.statusText}`);
       const data = await response.json();
       setPosts(data);
@@ -86,7 +86,7 @@ const Forum = () => {
       };
   
       try {
-        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/posts', {
+        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/posts', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const Forum = () => {
         const hasLiked = post.likes.includes(currentUser);
 
         // Toggle like/unlike
-        const response = await fetch(`https://boss-turkey-happily.ngrok-free.app/posts/${postId}/${hasLiked ? 'unlike' : 'like'}`, {
+        const response = await fetch(`https://raccoon-summary-bluejay.ngrok-free.app/posts/${postId}/${hasLiked ? 'unlike' : 'like'}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

@@ -41,7 +41,7 @@ const Login = ({ navigation, onLoginSuccess, onAdminLogin }) => {
     }
   
     try {
-      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/login', { username, password });
+      const response = await axios.post('https://raccoon-summary-bluejay.ngrok-free.app/login', { username, password });
       const user = response.data;
   
       // Store the username in AsyncStorage

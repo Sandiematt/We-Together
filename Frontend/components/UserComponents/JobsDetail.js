@@ -22,7 +22,7 @@ export default function JobDetail({ route }) {
   
       console.log('Application Data:', applicationData); // Log the data
   
-      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/api/jobapplicants', {
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/api/jobapplicants', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

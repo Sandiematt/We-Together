@@ -14,7 +14,7 @@ const LoanRequestScreen = ({ navigation }) => {
 
   const fetchLoans = async () => {
     try {
-      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/loans'); // Update with your server address
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/loans'); // Update with your server address
       if (!response.ok) {
         throw new Error('Failed to fetch loans');
       }

@@ -14,7 +14,7 @@ const JobAdminDetail = ({ route }) => {
     const fetchData = async () => {
       try {
         // Fetch applicants by job title
-        const applicantsResponse = await fetch(`https://boss-turkey-happily.ngrok-free.app/api/jobapplicants?jobtitle=${encodeURIComponent(selectedJobTitle)}`);
+        const applicantsResponse = await fetch(`https://raccoon-summary-bluejay.ngrok-free.app/api/jobapplicants?jobtitle=${encodeURIComponent(selectedJobTitle)}`);
         if (!applicantsResponse.ok) {
           throw new Error('Network response was not ok');
         }
@@ -23,7 +23,7 @@ const JobAdminDetail = ({ route }) => {
         setApplicants(applicantsData);
 
         // Fetch job openings
-        const jobsResponse = await fetch('https://boss-turkey-happily.ngrok-free.app/jobs');
+        const jobsResponse = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/jobs');
         const jobsData = await jobsResponse.json();
         setTotalJobOpenings(jobsData.length);
       } catch (error) {

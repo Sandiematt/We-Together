@@ -4,7 +4,7 @@ import { View, Text, ScrollView, Dimensions, Image, StyleSheet, Modal, Touchable
 // Import the images
 import SandeepImage from '../../assets/sandeep.jpg';
 import GreeshmaImage from '../../assets/greeshma.jpg';
-import AbrahamImage from '../../assets/abraham.jpg';
+
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -40,12 +40,7 @@ export default function AboutUs() {
                             <Text style={styles.devName}>Greeshma Girish</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleImagePress(AbrahamImage)}>
-                        <View style={styles.developerContainer}>
-                            <Image style={styles.dev} source={AbrahamImage} />
-                            <Text style={styles.devName}>Abraham Richard</Text>
-                        </View>
-                    </TouchableOpacity>
+                    
                 </View>
             </View>
             <View style={styles.box}>

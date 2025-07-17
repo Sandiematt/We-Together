@@ -12,7 +12,7 @@ const MakeAdminForum = () => {
     }
 
     try {
-      const response = await axios.put('https://boss-turkey-happily.ngrok-free.app/makeAdmin', {
+      const response = await axios.put('https://raccoon-summary-bluejay.ngrok-free.app/makeAdmin', {
         username: username, // Only send the username in the request
       });
 

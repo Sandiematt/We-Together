@@ -20,7 +20,7 @@ const SignUp = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post('https://boss-turkey-happily.ngrok-free.app/register', {
+      const response = await axios.post('https://raccoon-summary-bluejay.ngrok-free.app/register', {
         username,
         name,
         email,

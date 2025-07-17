@@ -12,7 +12,7 @@ const HomeScreenAdmin = ({ handleLogout ,navigation}) => {
   useEffect(() => {
     const fetchUserCount = async () => {
       try {
-        const response = await fetch('https://boss-turkey-happily.ngrok-free.app/userCount'); // Update with your API endpoint
+        const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/userCount'); // Update with your API endpoint
         const data = await response.json();
         setUserCount(data.count);
       } catch (error) {

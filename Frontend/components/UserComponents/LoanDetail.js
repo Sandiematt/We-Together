@@ -21,7 +21,7 @@ export default function LoanDetail({ route }) {
 
       console.log('Loan Application Data:', loanData); // Log the data
 
-      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/loanapplicants', {
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/loanapplicants', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -20,7 +20,7 @@ export default function LoanStatus() {
                 const storedUsername = await AsyncStorage.getItem('username'); 
                 if (storedUsername) {
                     // Fetch user data from API using the stored username
-                    const response = await axios.get(`https://boss-turkey-happily.ngrok-free.app/users/${storedUsername}`);
+                    const response = await axios.get(`https://raccoon-summary-bluejay.ngrok-free.app/users/${storedUsername}`);
                     setUsername(response.data.username); // Set username from API response
                 }
             } catch (error) {
@@ -37,7 +37,7 @@ export default function LoanStatus() {
     
             try {
                 // Fetching the applicant details based on the username
-                const applicantResponse = await axios.get(`https://boss-turkey-happily.ngrok-free.app/loanapplicants?name=${encodeURIComponent(username)}`);
+                const applicantResponse = await axios.get(`https://raccoon-summary-bluejay.ngrok-free.app/loanapplicants?name=${encodeURIComponent(username)}`);
                 const applicants = applicantResponse.data;
     
                
@@ -45,7 +45,7 @@ export default function LoanStatus() {
                     setApplicantDetails(applicants[0]); // Assuming you want the first applicant
     
                     // Fetching the loan details based on the loan title of the applicant
-                    const loanResponse = await axios.get(`https://boss-turkey-happily.ngrok-free.app/loanss?title=${encodeURIComponent(applicants[0].loantitle)}`);
+                    const loanResponse = await axios.get(`https://raccoon-summary-bluejay.ngrok-free.app/loanss?title=${encodeURIComponent(applicants[0].loantitle)}`);
                     const loans = loanResponse.data.loans; // Access the loans array from the response
     
                   

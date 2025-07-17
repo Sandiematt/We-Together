@@ -20,7 +20,7 @@ const EventsScreen = ({ navigation }) => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://boss-turkey-happily.ngrok-free.app/events'); 
+      const response = await fetch('https://raccoon-summary-bluejay.ngrok-free.app/events'); 
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
